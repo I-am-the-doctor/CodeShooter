@@ -10,7 +10,7 @@ import org.joml.Vector3f;
 
 /**
  *
- * @author kgr.10.moosherr.be
+ * @author Benjamin
  */
 public abstract class Entity {
 	/**

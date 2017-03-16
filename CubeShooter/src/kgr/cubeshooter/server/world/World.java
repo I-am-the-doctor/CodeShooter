@@ -7,7 +7,7 @@ package kgr.cubeshooter.server.world;
 
 /**
  *
- * @author kgr.10.moosherr.be
+ * @author Benjamin
  */
 public class World {
 	private String file;
