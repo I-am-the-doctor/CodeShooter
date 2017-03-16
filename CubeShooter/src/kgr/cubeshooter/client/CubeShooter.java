@@ -1,4 +1,4 @@
-package kgr.cubeshooter;
+package kgr.cubeshooter.client;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
