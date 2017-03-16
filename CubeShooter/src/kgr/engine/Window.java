@@ -9,7 +9,7 @@ package kgr.engine;
 
 /**
  *
- * @author kgr.10.pfarr.va
+ * @author Val
  */
 public class Window
 {
