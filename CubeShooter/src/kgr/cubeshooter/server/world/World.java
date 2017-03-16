@@ -10,6 +10,8 @@ package kgr.cubeshooter.server.world;
  * @author kgr.10.moosherr.be
  */
 public class World {
+	private String file;
+	
 	public World(String file) {
 		
 	}
@@ -26,7 +28,19 @@ public class World {
 		
 	}
 	
+	String getFile() {
+		return this.file;
+	}
+	
 	public void tick(int milliseconds) {
+		
+	}
+	
+	public void addEntity() {
+		
+	}
+	
+	public void addCollideable() {
 		
 	}
 }
