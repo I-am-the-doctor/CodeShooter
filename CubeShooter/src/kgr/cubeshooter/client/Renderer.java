@@ -29,10 +29,20 @@ public class Renderer {
      */
     private ShaderProgram shaderProgram;
 
+
+    /**
+     *
+     */
     public Renderer() {
         transformation = new Transformation();
     }
 
+
+    /**
+     *
+     * @param window
+     * @throws Exception
+     */
     public void init(Window window) throws Exception {
         // Create shader
         shaderProgram = new ShaderProgram();
@@ -47,10 +57,21 @@ public class Renderer {
         shaderProgram.createUniform("texture_sampler");
     }
 
+
+    /**
+     *
+     */
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
+
+    /**
+     *
+     * @param window
+     * @param camera
+     * @param gameItems
+     */
     public void render(Window window, Camera camera, GraphItem[] gameItems) {
         clear();
 
@@ -81,6 +102,10 @@ public class Renderer {
         shaderProgram.unbind();
     }
 
+
+    /**
+     * 
+     */
     public void cleanup() {
         if (shaderProgram != null) {
             shaderProgram.cleanup();
