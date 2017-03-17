@@ -2,7 +2,7 @@ package kgr.engine;
 
 public class GameEngine implements Runnable {
 
-    public static final int TARGET_FPS = 75;
+    public static final int TARGET_FPS = 60;
 
     public static final int TARGET_UPS = 30;
 
@@ -16,6 +16,16 @@ public class GameEngine implements Runnable {
 
     private final MouseInput mouseInput;
 
+
+    /**
+     * Creates a new instance of the game engine which runs a new thread for the loop.
+     * @param windowTitle
+     * @param width
+     * @param height
+     * @param vSync
+     * @param gameLogic
+     * @throws Exception
+     */
     public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
         gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
         window = new Window(windowTitle, width, height, vSync);
@@ -24,6 +34,10 @@ public class GameEngine implements Runnable {
         timer = new Timer();
     }
 
+
+    /**
+     * Starts the game (initializing the game loop, logic etc).
+     */
     public void start() {
         String osName = System.getProperty("os.name");
         if ( osName.contains("Mac") ) {
@@ -78,9 +92,9 @@ public class GameEngine implements Runnable {
     }
 
     protected void cleanup() {
-        gameLogic.cleanup();                
+        gameLogic.cleanup();
     }
-    
+
     private void sync() {
         float loopSlot = 1f / TARGET_FPS;
         double endTime = timer.getLastLoopTime() + loopSlot;

@@ -1,10 +1,5 @@
 package kgr.cubeshooter.client;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import static org.lwjgl.glfw.GLFW.*;
-
 import kgr.engine.GraphItem;
 import kgr.engine.IGameLogic;
 import kgr.engine.MouseInput;
@@ -12,7 +7,17 @@ import kgr.engine.Window;
 import kgr.engine.graph.Camera;
 import kgr.engine.graph.Mesh;
 import kgr.engine.graph.Texture;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import static org.lwjgl.glfw.GLFW.*;
 
+
+/**
+ * The class with the game loop in it.
+ * Updating, rendering etc…
+ *
+ * @author Val
+ */
 public class CubeShooter implements IGameLogic {
 
     private static final float MOUSE_SENSITIVITY = 0.2f;
@@ -27,12 +32,22 @@ public class CubeShooter implements IGameLogic {
 
     private static final float CAMERA_POS_STEP = 0.05f;
 
+
+    /**
+     * Creates a new instance.
+     */
     public CubeShooter() {
         renderer = new Renderer();
         camera = new Camera();
         cameraInc = new Vector3f(0, 0, 0);
     }
 
+
+    /**
+     *
+     * @param window
+     * @throws Exception
+     */
     @Override
     public void init(Window window) throws Exception {
         renderer.init(window);
