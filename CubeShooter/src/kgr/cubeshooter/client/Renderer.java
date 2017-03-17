@@ -13,7 +13,7 @@ import kgr.engine.graph.Transformation;
 public class Renderer {
 
     /**
-     * Field of View in Radians
+     * The Field of View in Radians.
      */
     private static final float FOV = (float) Math.toRadians(60.0f);
 
@@ -32,8 +32,9 @@ public class Renderer {
     public void init(Window window) throws Exception {
         // Create shader
         shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader("../cubeshooter/shaders/vertex.vs");
-        shaderProgram.createFragmentShader("../cubeshooter/shaders/fragment.fs");
+
+        shaderProgram.createVertexShader("/kgr/cubeshooter/data/shaders/vertex.vs");  // ## Paths?
+        shaderProgram.createFragmentShader("/kgr/cubeshooter/data/shaders/fragment.fs");
         shaderProgram.link();
 
         // Create uniforms for modelView and projection matrices and texture
