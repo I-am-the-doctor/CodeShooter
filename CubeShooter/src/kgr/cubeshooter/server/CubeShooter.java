@@ -9,7 +9,7 @@ package kgr.cubeshooter.server;
 
 /**
  *
- * @author kgr.10.pfarr.va
+ * @author Val
  */
 public class CubeShooter
 {
