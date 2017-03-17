@@ -18,9 +18,9 @@ import kgr.cubeshooter.server.world.entites.ITickable;
 public class World {
 	String file;
 	
-	List<Entity> entities;
-	List<ICollideable> collideables;
-	List<ITickable> tickables;
+	List<Entity> entityList;
+	List<ICollideable> collideableList;
+	List<ITickable> tickableList;
 	
 	public void load(String file) {
 		this.file = file;
@@ -29,9 +29,9 @@ public class World {
 	public void unload() {
 		file = "";
 		
-		entities.clear();
-		collideables.clear();
-		tickables.clear();
+		entityList.clear();
+		collideableList.clear();
+		tickableList.clear();
 	}
 	
 	public void reload() {
@@ -43,11 +43,11 @@ public class World {
 	}
 	
 	public void tick(int milliseconds) {
-		this.tickables.forEach((tickable) -> {
+		this.tickableList.forEach((tickable) -> {
 			tickable.tick(milliseconds);
 		});
 		
-		for (Iterator<ICollideable> it_1 = this.collideables.iterator(); it_1.hasNext();) {
+		for (Iterator<ICollideable> it_1 = this.collideableList.iterator(); it_1.hasNext();) {
 			ICollideable collidable = it_1.next();
 			for (Iterator<ICollideable> it_2 = it_1; it_2.hasNext();) {
 				collidable.collide(it_2.next());
@@ -62,7 +62,7 @@ public class World {
 	 * @param entity 
 	 */
 	public void addEntity(Entity entity) {
-		this.entities.add(entity);
+		this.entityList.add(entity);
 		
 		if (entity instanceof ICollideable) {
 			addCollideable((ICollideable) entity);
@@ -74,10 +74,10 @@ public class World {
 	}
 	
 	public void addCollideable(ICollideable collideable) {
-		this.collideables.add(collideable);
+		this.collideableList.add(collideable);
 	}
 	
 	public void addTickable(ITickable tickable) {
-		this.tickables.add(tickable);
+		this.tickableList.add(tickable);
 	}
 }
