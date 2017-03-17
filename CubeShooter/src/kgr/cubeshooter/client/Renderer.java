@@ -1,14 +1,15 @@
 package kgr.cubeshooter.client;
 
-import org.joml.Matrix4f;
-
-import static org.lwjgl.opengl.GL11.*;
-
 import kgr.engine.GraphItem;
 import kgr.engine.Window;
 import kgr.engine.graph.Camera;
 import kgr.engine.graph.ShaderProgram;
 import kgr.engine.graph.Transformation;
+import org.joml.Matrix4f;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 public class Renderer {
 
@@ -23,6 +24,9 @@ public class Renderer {
 
     private final Transformation transformation;
 
+    /**
+     * A test shader program.
+     */
     private ShaderProgram shaderProgram;
 
     public Renderer() {
@@ -33,8 +37,8 @@ public class Renderer {
         // Create shader
         shaderProgram = new ShaderProgram();
 
-        shaderProgram.createVertexShader("/kgr/cubeshooter/data/shaders/vertex.vs");  // ## Paths?
-        shaderProgram.createFragmentShader("/kgr/cubeshooter/data/shaders/fragment.fs");
+        shaderProgram.createVertexShader("kgr/cubeshooter/data/shaders/vertex.vs");
+        shaderProgram.createFragmentShader("kgr/cubeshooter/data/shaders/fragment.fs");
         shaderProgram.link();
 
         // Create uniforms for modelView and projection matrices and texture
