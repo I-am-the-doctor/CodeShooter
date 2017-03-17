@@ -5,13 +5,16 @@
  */
 package kgr.cubeshooter.server.world.entites;
 
+import kgr.cubeshooter.server.world.entites.boundingBoxes.BoundingBox;
 import org.joml.Vector3f;
 
 /**
  *
  * @author Benjamin
  */
-public interface Collideable {
+public interface ICollideable {
+	public void collide(ICollideable collider);
+	
 	public BoundingBox getBoundingBox();
 	
 	public boolean hasVeclocity();

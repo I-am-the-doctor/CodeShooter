@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world.entites;
+package kgr.cubeshooter.server.world.entites.boundingBoxes;
 
 import org.joml.Vector3f;
 
@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 public abstract class BoundingBox {
 	public enum Type {
 		SPHERE,
-		CUBE,
+		CUBOID,
 		CYLINDER,
 		PRISMA,
 		CONE,
@@ -31,22 +31,16 @@ public abstract class BoundingBox {
 	 * The smallest sphere around the real bounding box.
 	 * @return The maximal radius of the bounding box.
 	 */
-	float radius;
+	float radiusSquared;
 	
-	public BoundingBox(Vector3f position, float radius) {
+	public BoundingBox(Vector3f position, float radiusSquared) {
 		this.position = position;
-		this.radius = radius;
+		this.radiusSquared = radiusSquared;
 	}
-
-	public boolean collide(Collideable collider) {
-		if (position.distance(collider.getBoundingBox().getPosition()) < radius + collider.getBoundingBox().radius) {
-			
-			// TODO
-			return false;
-		}
-		
-		return false;
-	}
+	
+	public abstract Type getType();
+	
+	public abstract float getSquaredDistanceToSurface(Vector3f direction);
 	
 	public Vector3f getPosition() {
 		return this.position;
@@ -56,11 +50,7 @@ public abstract class BoundingBox {
 		this.position = position;
 	}
 	
-	public float getRadius() {
-		return this.radius;
-	}
-	
-	public void setRadius(float radius) {
-		this.radius = radius;
+	public float getRadiusSquared() {
+		return this.radiusSquared;
 	}
 }

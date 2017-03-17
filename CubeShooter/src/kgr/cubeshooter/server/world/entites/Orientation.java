@@ -16,7 +16,7 @@ public final class Orientation {
 	 * The rotationVector described as the normal or front vector of the entity.
 	 * For example:
 	 * -Player: view vector
-	 * -Cube: normal vector
+	 * -Cuboid: normal vector (the y-axis if the co#uboid is aligned to the grid)
 	 * -cylinder: cylinder axis (axis between the the two ground planes)
 	 */
 	private Vector3f rotationVector;
@@ -26,7 +26,10 @@ public final class Orientation {
 	 */
 	private float rotationAngle;
 	
-	public Orientation() {}
+	public Orientation() {
+		this.rotationVector = new Vector3f(0, 1, 0);
+		this.rotationAngle = 0;
+	}
 	
 	public Orientation(Vector3f rotationVector, float rotationAngle) {
 		this.rotationVector = rotationVector;
