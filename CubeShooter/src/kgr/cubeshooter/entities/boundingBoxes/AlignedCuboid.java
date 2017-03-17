@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world.entites.boundingBoxes;
+package kgr.cubeshooter.entities.boundingBoxes;
 
 import org.joml.Vector3f;
 
@@ -12,9 +12,10 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public class AlignedCuboid extends BoundingBox {
-	float a;
-	float b;
-	float c;
+	
+	protected float a;
+	protected float b;
+	protected float c;
 	
 	/**
 	 * 

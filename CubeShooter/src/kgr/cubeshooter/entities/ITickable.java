@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world.entites;
+package kgr.cubeshooter.entities;
 
 /**
  *
  * @author Benjamin
  */
 public interface ITickable {
+	
 	public void tick(int milliseconds);
 }

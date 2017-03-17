@@ -3,25 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world.entites;
+package kgr.cubeshooter.entities;
 
-import kgr.cubeshooter.server.world.entites.boundingBoxes.BoundingBox;
-import org.joml.Vector3f;
+import kgr.cubeshooter.entities.boundingBoxes.BoundingBox;
 
 /**
  *
  * @author Benjamin
  */
 public interface ICollideable {
+	
 	public void collide(ICollideable collider);
 	
 	public BoundingBox getBoundingBox();
 	
 	public boolean hasVeclocity();
 	
-	public Vector3f getMoveVelocity();
+	public Velocity getMoveVelocity();
 	
-	public void setMoveVelocity(Vector3f moveVelocity);
+	public void setMoveVelocity(Velocity moveVelocity);
 	
 	public TurningMoment getTurningMoment();
 	

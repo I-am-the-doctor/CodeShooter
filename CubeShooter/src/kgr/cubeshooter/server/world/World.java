@@ -7,20 +7,21 @@ package kgr.cubeshooter.server.world;
 
 import java.util.Iterator;
 import java.util.List;
-import kgr.cubeshooter.server.world.entites.Entity;
-import kgr.cubeshooter.server.world.entites.ICollideable;
-import kgr.cubeshooter.server.world.entites.ITickable;
+import kgr.cubeshooter.server.world.entities.Entity;
+import kgr.cubeshooter.entities.ICollideable;
+import kgr.cubeshooter.entities.ITickable;
 
 /**
  *
  * @author Benjamin
  */
 public class World {
-	String file;
 	
-	List<Entity> entityList;
-	List<ICollideable> collideableList;
-	List<ITickable> tickableList;
+	protected String file;
+	
+	protected List<Entity> entityList;
+	protected List<ICollideable> collideableList;
+	protected List<ITickable> tickableList;
 	
 	public void load(String file) {
 		this.file = file;

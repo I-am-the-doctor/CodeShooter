@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world.entites;
+package kgr.cubeshooter.entities;
 
 import org.joml.Vector3f;
 
@@ -13,6 +13,7 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public final class TurningMoment {
+	
 	/**
 	 * Already specifies all properties needed:
 	 * - the direction specifies the rotation axis and
@@ -53,7 +54,8 @@ public final class TurningMoment {
 		if (rotationSpeed != 0) {
 			return this.rotationSpeed;
 		} else {
-			return this.turningMoment.length();
+			this.rotationSpeed = this.turningMoment.length();
+			return this.rotationSpeed;
 		}
 	}
 	
