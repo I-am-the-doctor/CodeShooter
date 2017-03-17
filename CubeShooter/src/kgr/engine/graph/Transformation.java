@@ -23,7 +23,7 @@ public class Transformation
    private final Matrix4f modelViewMatrix;
 
    /**
-    * 
+    *
     */
    private final Matrix4f viewMatrix;
 
@@ -58,6 +58,11 @@ public class Transformation
    }
 
 
+   /**
+    *
+    * @param camera
+    * @return
+    */
    public Matrix4f getViewMatrix(Camera camera)
    {
       Vector3f cameraPos = camera.getPosition();
@@ -73,6 +78,12 @@ public class Transformation
    }
 
 
+   /**
+    *
+    * @param gameItem
+    * @param viewMatrix
+    * @return
+    */
    public Matrix4f getModelViewMatrix(GraphItem gameItem, Matrix4f viewMatrix)
    {
       Vector3f rotation = gameItem.getRotation();
