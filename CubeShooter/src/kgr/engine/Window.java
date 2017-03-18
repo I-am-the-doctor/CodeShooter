@@ -1,12 +1,16 @@
 package kgr.engine;
 
-import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
@@ -55,13 +59,13 @@ public class Window {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        // Create the window
+        // Create the window.
         windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowHandle == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        // Setup resize callback
+        // Setup resize callback.
         glfwSetWindowSizeCallback(windowHandle, windowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
@@ -93,8 +97,8 @@ public class Window {
         // Make the OpenGL context current
         glfwMakeContextCurrent(windowHandle);
 
-        if (isvSync()) {
-            // Enable v-sync
+        if (isVSync()) {
+            // Enable v-sync.
             glfwSwapInterval(1);
         }
 
@@ -144,7 +148,7 @@ public class Window {
         this.resized = resized;
     }
 
-    public boolean isvSync() {
+    public boolean isVSync() {
         return vSync;
     }
 

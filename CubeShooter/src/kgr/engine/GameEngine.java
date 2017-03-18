@@ -47,6 +47,10 @@ public class GameEngine implements Runnable {
         }
     }
 
+
+    /**
+     * Fires up everything, first initialization, then the game loop.
+     */
     @Override
     public void run() {
         try {
@@ -59,6 +63,11 @@ public class GameEngine implements Runnable {
         }
     }
 
+
+    /**
+     * Initialize everything.
+     * @throws Exception If something bad happens :-)
+     */
     protected void init() throws Exception {
         window.init();
         timer.init();
@@ -66,55 +75,86 @@ public class GameEngine implements Runnable {
         gameLogic.init(window);
     }
 
+
+    /**
+     * This is the main game loop:
+     * Handle input,
+     * process logic,
+     * render.
+     */
     protected void gameLoop() {
         float elapsedTime;
         float accumulator = 0f;
-        float interval = 1f / TARGET_UPS;
+        float delta = 1f / TARGET_UPS;
 
         boolean running = true;
-        while (running && !window.windowShouldClose()) {
+        while (running &! window.windowShouldClose()) {
             elapsedTime = timer.getElapsedTime();
             accumulator += elapsedTime;
 
             input();
 
-            while (accumulator >= interval) {
-                update(interval);
-                accumulator -= interval;
+            while (accumulator >= delta) {
+               // The logic should be called in regular time steps.
+                update(delta);
+                accumulator -= delta;
             }
 
             render();
 
-            if ( !window.isvSync() ) {
+            if ( ! window.isVSync() ) {
+               // We only have to wait if VSync isn't enabled.
                 sync();
             }
         }
     }
 
+
+    /**
+     * Invoke cleanup methods.
+     */
     protected void cleanup() {
         gameLogic.cleanup();
     }
 
+
+    /**
+     * Sleep until we can continue to the next frame.
+     */
     private void sync() {
         float loopSlot = 1f / TARGET_FPS;
         double endTime = timer.getLastLoopTime() + loopSlot;
         while (timer.getTime() < endTime) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(1); // Zzzz…
             } catch (InterruptedException ie) {
+               // Should'nt happen!
             }
         }
     }
 
+
+    /**
+     * Invoke input methods.
+     */
     protected void input() {
         mouseInput.input(window);
         gameLogic.input(window, mouseInput);
     }
 
-    protected void update(float interval) {
-        gameLogic.update(interval, mouseInput);
+
+    /**
+     * Invoke update methods.
+     * @param delta Elapsed time.
+     */
+    protected void update(float delta) {
+        gameLogic.update(delta, mouseInput);
     }
 
+
+    /**
+     * Invoke render methods.
+     */
     protected void render() {
         gameLogic.render(window);
         window.update();

@@ -2,11 +2,16 @@ package kgr.engine;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;
-import static org.lwjgl.glfw.GLFW.*;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Helper class for convenient access onto mouse events.
+ *
+ * @author Val
+ */
 public class MouseInput {
 
     private final Vector2d previousPos;
@@ -22,9 +27,9 @@ public class MouseInput {
     private boolean rightButtonPressed = false;
 
     private GLFWCursorPosCallback cursorPosCallback;
-    
+
     private GLFWCursorEnterCallback cursorEnterCallback;
-    
+
     private GLFWMouseButtonCallback mouseButtonCallback;
 
     public MouseInput() {
@@ -33,6 +38,10 @@ public class MouseInput {
         displVec = new Vector2f();
     }
 
+    /**
+     * Add the mouse input listeners to the window.
+     * @param window Window which listens to input.
+     */
     public void init(Window window) {
         glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
@@ -59,6 +68,8 @@ public class MouseInput {
     public Vector2f getDisplVec() {
         return displVec;
     }
+
+
 
     public void input(Window window) {
         displVec.x = 0;

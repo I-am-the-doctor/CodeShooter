@@ -14,9 +14,8 @@ public class Main
    public static void main(String[] args)
    {
       try {
-         boolean vSync = true;
          IGameLogic gameLogic = new CubeShooter();
-         GameEngine gameEng = new GameEngine("CubeShooter", 600, 480, vSync, gameLogic);
+         GameEngine gameEng = new GameEngine("CubeShooter", 800, 600, true, gameLogic);
          gameEng.start();
       }
       catch (Exception excp) {

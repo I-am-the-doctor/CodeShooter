@@ -1,5 +1,6 @@
 package kgr.cubeshooter.client;
 
+import java.util.Collection;
 import kgr.engine.GraphItem;
 import kgr.engine.Utils;
 import kgr.engine.Window;
@@ -21,8 +22,15 @@ public class Renderer
     */
    private static final float FOV = (float) Math.toRadians(60.0f);
 
+   /**
+    * Near clip distance.
+    */
    private static final float Z_NEAR = 0.01f;
 
+
+   /**
+    * Far clip distance.
+    */
    private static final float Z_FAR = 1000.f;
 
    private final Transformation transformation;
@@ -52,9 +60,12 @@ public class Renderer
       // Create shader.
       shaderProgram = new ShaderProgram();
 
-      // Load the shader programs.
-      shaderProgram.createVertexShader(Utils.readFile("/kgr/cubeshooter/data/shaders/vertex.vs"));
-      shaderProgram.createFragmentShader(Utils.readFile("/kgr/cubeshooter/data/shaders/fragment.fs"));
+      // Load the shader program.
+      String vsCode = Utils.readFile("/kgr/cubeshooter/data/shaders/vertex.vs");
+      String fsCode = Utils.readFile("/kgr/cubeshooter/data/shaders/fragment.fs");
+
+      shaderProgram.createVertexShader(vsCode);
+      shaderProgram.createFragmentShader(fsCode);
       // Link it.
       shaderProgram.link();
 
@@ -80,7 +91,7 @@ public class Renderer
     * @param camera The camera.
     * @param graphItems Render a list of graphical items.
     */
-   public void render(Window window, Camera camera, GraphItem[] graphItems)
+   public void render(Window window, Camera camera, Collection<GraphItem> graphItems)
    {
       clear();
 
@@ -101,10 +112,10 @@ public class Renderer
       shaderProgram.setUniform("texture_sampler", 0);
       // Render each graphItem
       for (GraphItem graphItem : graphItems) {
-         // Set model view matrix for this item
+         // Set model view matrix for this item…
          Matrix4f modelViewMatrix = transformation.getModelViewMatrix(graphItem, viewMatrix);
          shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-         // Render the mes for this game item
+         // … and render the mesh for this game item.
          graphItem.getMesh().render();
       }
 
@@ -113,7 +124,7 @@ public class Renderer
 
 
    /**
-    *
+    * Cleanup (shader programs etc.)
     */
    public void cleanup()
    {
