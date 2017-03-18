@@ -135,7 +135,7 @@ public class CubeShooter implements IGameLogic {
             16, 18, 19, 17, 16, 19,
             // Back face
             4, 6, 7, 5, 4, 7,};
-        Texture texture = new Texture("data/textures/grassblock.png");
+        Texture texture = new Texture("/kgr/cubeshooter/data/textures/grassblock.png");
         Mesh mesh = new Mesh(positions, textCoords, indices, texture);
         GraphItem gameItem1 = new GraphItem(mesh);
         gameItem1.setScale(0.5f);

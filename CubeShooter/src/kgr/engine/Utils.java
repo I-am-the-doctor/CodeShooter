@@ -21,7 +21,7 @@ public class Utils
    public static String readFile(String filename) throws IOException
    {
       String result;
-      try (InputStream in = Utils.class.getClass().getResourceAsStream(filename);
+      try (InputStream in = Utils.class.getResourceAsStream(filename);
            Scanner scanner = new Scanner(in, "UTF-8")) {
          result = scanner.useDelimiter("\\A").next();
       }

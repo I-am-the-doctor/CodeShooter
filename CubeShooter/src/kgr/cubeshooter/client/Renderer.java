@@ -53,8 +53,8 @@ public class Renderer
       shaderProgram = new ShaderProgram();
 
       // Load the shader programs.
-      shaderProgram.createVertexShader(Utils.readFile("kgr/cubeshooter/data/shaders/vertex.vs"));
-      shaderProgram.createFragmentShader(Utils.readFile("kgr/cubeshooter/data/shaders/fragment.fs"));
+      shaderProgram.createVertexShader(Utils.readFile("/kgr/cubeshooter/data/shaders/vertex.vs"));
+      shaderProgram.createFragmentShader(Utils.readFile("/kgr/cubeshooter/data/shaders/fragment.fs"));
       // Link it.
       shaderProgram.link();
 
