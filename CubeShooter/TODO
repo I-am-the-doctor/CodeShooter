@@ -1,0 +1,19 @@
+TODO list for CubeShooter
+=========================
+
+General:
+ - integrate the render engine into the game code
+ - restructure the main loop for better performance
+
+
+Game:
+ - basic networking
+ - collision detection
+ - saving/loading of maps (which format)
+ - …
+
+
+Engine:
+ - parsing of OBJ material (".mtl") files
+ - phong shading (ambient, diffuse and specular lighting as well as texture maps)
+ - …

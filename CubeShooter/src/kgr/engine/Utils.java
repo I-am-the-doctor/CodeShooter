@@ -1,7 +1,11 @@
 package kgr.engine;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -13,8 +17,7 @@ import java.util.Scanner;
 public class Utils
 {
    /**
-    * @param filename Name of the file to load.
-    *
+    * @param filename Path of the file to load.
     * @return The contents of the file.
     * @throws IOException If the file couldn't be loaded.
     */
@@ -30,8 +33,30 @@ public class Utils
 
 
    /**
+    * Reads the contents of a text file.
+    * @param filename Path to the file.
+    * @return A list with the lines.
+    * @throws Exception If the file couldn't be loaded.
+    */
+   public static List<String> readAllLines(String filename) throws Exception
+   {
+      List<String> list = new ArrayList<>();
+      InputStreamReader isr = new InputStreamReader(Utils.class.getClass().getResourceAsStream(filename));
+      try (
+         BufferedReader br = new BufferedReader(isr)) {
+         String line;
+         while ((line = br.readLine()) != null) {
+            list.add(line);
+         }
+      }
+      return list;
+   }
+
+
+   /**
     * Singleton.
     */
    private Utils()
-   {  }
+   {
+   }
 }

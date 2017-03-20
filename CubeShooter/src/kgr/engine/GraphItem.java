@@ -1,14 +1,14 @@
 package kgr.engine;
 
-import org.joml.Vector3f;
 import kgr.engine.graph.Mesh;
+import org.joml.Vector3f;
 
 public class GraphItem {
 
     private final Mesh mesh;
-    
+
     private final Vector3f position;
-    
+
     private float scale;
 
     private final Vector3f rotation;
@@ -30,6 +30,11 @@ public class GraphItem {
         this.position.z = z;
     }
 
+
+    public void setPosition(Vector3f pos) {
+       setPosition(pos.x, pos.y, pos.z);
+    }
+
     public float getScale() {
         return scale;
     }
@@ -47,7 +52,11 @@ public class GraphItem {
         this.rotation.y = y;
         this.rotation.z = z;
     }
-    
+
+    public void setRotation(Vector3f rot) {
+       setRotation(rot.x, rot.y, rot.z);
+    }
+
     public Mesh getMesh() {
         return mesh;
     }
