@@ -13,6 +13,12 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+
+/**
+ * A class that wraps input, vsync, etc.
+ *
+ * @author Val
+ */
 public class Window {
 
     private final String title;
@@ -33,6 +39,13 @@ public class Window {
 
     private boolean vSync;
 
+
+    /**
+     * @param title
+     * @param width
+     * @param height
+     * @param vSync
+     */
     public Window(String title, int width, int height, boolean vSync) {
         this.title = title;
         this.width = width;
@@ -41,6 +54,10 @@ public class Window {
         this.resized = false;
     }
 
+
+    /**
+     * Setup callbacks for input, errors etc.
+     */
     public void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.

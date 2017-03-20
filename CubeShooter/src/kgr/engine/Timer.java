@@ -1,9 +1,15 @@
 package kgr.engine;
 
+
+/**
+ * A helper class for timing the loop etc…
+ *
+ * @author Val
+ */
 public class Timer {
 
     private double lastLoopTime;
-    
+
     public void init() {
         lastLoopTime = getTime();
     }

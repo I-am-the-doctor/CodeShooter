@@ -8,6 +8,7 @@ import kgr.engine.MouseInput;
 import kgr.engine.Window;
 import kgr.engine.graph.Camera;
 import kgr.engine.graph.Mesh;
+import kgr.engine.graph.ObjImporter;
 import kgr.engine.graph.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -22,7 +23,9 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class CubeShooter implements IGameLogic
 {
-
+   /**
+    * Impact of mouse movement on rotation.
+    */
    private static final float MOUSE_SENSITIVITY = 0.3f;
 
    /**
@@ -34,12 +37,19 @@ public class CubeShooter implements IGameLogic
 
    private final Camera camera;
 
+   /**
+    * Temporary mesh to show some action.
+    */
+   GraphItem suzanne;
 
    /**
     * Temporary list of all objects to render.
     */
    private Set<GraphItem> graphItems;
 
+   /**
+    * Velocity of the camera (temporary)
+    */
    private static final float CAMERA_POS_STEP = 0.05f;
 
 
@@ -55,7 +65,6 @@ public class CubeShooter implements IGameLogic
 
 
    /**
-    *
     * @param window
     *
     * @throws Exception
@@ -152,12 +161,22 @@ public class CubeShooter implements IGameLogic
          4, 6, 7, 5, 4, 7,};
 
       // Now we can create a texture and the cube mesh from the data.
-      Texture blockTex = new Texture("/kgr/cubeshooter/data/textures/test.png");
-      Mesh mesh = new Mesh(positions, textCoords, indices, blockTex);
+      Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
+      Mesh mesh = new Mesh(positions, textCoords, new float[0], indices, texture);
+
+      // Load a test ".obj" model.
+      Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
+      texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
+
+      suzanne = new GraphItem(suzanneMesh);
+      suzanneMesh.setTexture(texture);
+      suzanne.setPosition(5, 10, 5);
+      suzanne.setRotation(0, 150, 0);
+      graphItems.add(suzanne);
 
       // Create a simple cube floor (for test purposes).
-      for (int x = 0; x < 100; x++) {
-         for (int z = 0; z < 100; z++) {
+      for (float x = 0; x < 100; x++) {
+         for (float z = 0; z < 100; z++) {
             GraphItem graphItem = new GraphItem(mesh);
             graphItem.setPosition(x, 0, z);
             graphItems.add(graphItem);
@@ -197,24 +216,32 @@ public class CubeShooter implements IGameLogic
 
 
    /**
+    * Update one frame/tick.
     *
-    * @param delta
-    * @param mouseInput
+    * @param delta      Time since last frame.
+    * @param mouseInput Input data from the mouse.
     */
    @Override
    public void update(float delta, MouseInput mouseInput)
    {
-      // Update camera position
+      // Update camera position.
       camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 
-      // Update camera based on mouse
+      // Update camera based on mouse.
       if (mouseInput.isRightButtonPressed()) {
          Vector2f rotVec = mouseInput.getDisplVec();
          camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
       }
+
+      // Rotate Suzanne a bit. :-)
+      suzanne.setRotation(suzanne.getRotation().x, suzanne.getRotation().y+1, suzanne.getRotation().z);
    }
 
 
+   /**
+    * Tell the renderer to render.
+    * @param window
+    */
    @Override
    public void render(Window window)
    {
@@ -222,6 +249,9 @@ public class CubeShooter implements IGameLogic
    }
 
 
+   /**
+    * Clean everything up.
+    */
    @Override
    public void cleanup()
    {

@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -21,12 +22,10 @@ public class ShaderProgram
     */
    private int vertexShaderId;
 
-
    /**
     * ID of the fragment shader.
     */
    private int fragmentShaderId;
-
 
    /**
     * The uniform variables to be set in the shaders,
@@ -36,6 +35,7 @@ public class ShaderProgram
 
    /**
     * Creates a new shader program object.
+    *
     * @throws Exception
     */
    public ShaderProgram() throws Exception
@@ -50,7 +50,9 @@ public class ShaderProgram
 
    /**
     * Creates a new uniform variable for the program.
+    *
     * @param uniformName Name of the variable (should be contained in one of the shaders).
+    *
     * @throws Exception
     */
    public void createUniform(String uniformName) throws Exception
@@ -65,8 +67,9 @@ public class ShaderProgram
 
    /**
     * Sets a matrix uniform.
+    *
     * @param uniformName Name of the uniform to be set.
-    * @param value Value of the uniform.
+    * @param value       Value of the uniform.
     */
    public void setUniform(String uniformName, Matrix4f value)
    {
@@ -80,9 +83,22 @@ public class ShaderProgram
 
 
    /**
+    * Sets a float vector uniform.
+    *
+    * @param uniformName Name of the uniform to be set.
+    * @param value       Value of the uniform.
+    */
+   public void setUniform(String uniformName, Vector3f value)
+   {
+      glUniform3f(uniforms.get(uniformName), value.x, value.y, value.z);
+   }
+
+
+   /**
     * Sets a simple int uniform.
-    * @param uniformName
-    * @param value
+    *
+    * @param uniformName Name of the uniform to be set.
+    * @param value       Value of the uniform.
     */
    public void setUniform(String uniformName, int value)
    {
@@ -92,8 +108,10 @@ public class ShaderProgram
 
    /**
     * Attaches a vertex shader to the program.
-    * @param shaderCode
-    * @throws Exception
+    *
+    * @param shaderCode The code from which to create the vertex shader.
+    *
+    * @throws Exception When it fails.
     */
    public void createVertexShader(String shaderCode) throws Exception
    {
@@ -103,8 +121,10 @@ public class ShaderProgram
 
    /**
     * Attaches a fragment shader to the program.
-    * @param shaderCode
-    * @throws Exception
+    *
+    * @param shaderCode The code from which to create the fragment shader.
+    *
+    * @throws Exception When it fails.
     */
    public void createFragmentShader(String shaderCode) throws Exception
    {
@@ -144,6 +164,7 @@ public class ShaderProgram
 
    /**
     * Links the shader program.
+    *
     * @throws Exception
     */
    public void link() throws Exception
@@ -187,7 +208,7 @@ public class ShaderProgram
 
 
    /**
-    * Unbinidng and deleting the program.
+    * Unbinding and deleting the program.
     */
    public void cleanup()
    {
