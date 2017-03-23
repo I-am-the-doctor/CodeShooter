@@ -30,12 +30,20 @@ public class CubeShooter implements IGameLogic
     */
    private final Vector3f cameraInc;
 
+
+   /**
+    * The renderer instance.
+    */
    private final Renderer renderer;
 
+
+   /**
+    * The camera instance.
+    */
    private final Camera camera;
 
    /**
-    *
+    * The color of the ambient light.
     */
    private Vector3f ambientLight;
 
@@ -47,7 +55,7 @@ public class CubeShooter implements IGameLogic
    /**
     * Temporary mesh to show some action.
     */
-   GraphItem suzanne;
+   private GraphItem suzanne;
 
    /**
     * Temporary list of all objects to render.
@@ -81,99 +89,14 @@ public class CubeShooter implements IGameLogic
    {
       graphItems = new HashSet<>();
       renderer.init(window);
-      // Create the Mesh.
-      float[] positions = new float[] {
-         // V0
-         -0.5f, 0.5f, 0.5f,
-         // V1
-         -0.5f, -0.5f, 0.5f,
-         // V2
-         0.5f, -0.5f, 0.5f,
-         // V3
-         0.5f, 0.5f, 0.5f,
-         // V4
-         -0.5f, 0.5f, -0.5f,
-         // V5
-         0.5f, 0.5f, -0.5f,
-         // V6
-         -0.5f, -0.5f, -0.5f,
-         // V7
-         0.5f, -0.5f, -0.5f,
-         // For text coords in top face
-         // V8: V4 repeated
-         -0.5f, 0.5f, -0.5f,
-         // V9: V5 repeated
-         0.5f, 0.5f, -0.5f,
-         // V10: V0 repeated
-         -0.5f, 0.5f, 0.5f,
-         // V11: V3 repeated
-         0.5f, 0.5f, 0.5f,
-         // For text coords in right face
-         // V12: V3 repeated
-         0.5f, 0.5f, 0.5f,
-         // V13: V2 repeated
-         0.5f, -0.5f, 0.5f,
-         // For text coords in left face
-         // V14: V0 repeated
-         -0.5f, 0.5f, 0.5f,
-         // V15: V1 repeated
-         -0.5f, -0.5f, 0.5f,
-         // For text coords in bottom face
-         // V16: V6 repeated
-         -0.5f, -0.5f, -0.5f,
-         // V17: V7 repeated
-         0.5f, -0.5f, -0.5f,
-         // V18: V1 repeated
-         -0.5f, -0.5f, 0.5f,
-         // V19: V2 repeated
-         0.5f, -0.5f, 0.5f,};
 
-      float[] textCoords = new float[] {
-         0.0f, 0.0f,
-         0.0f, 0.5f,
-         0.5f, 0.5f,
-         0.5f, 0.0f,
-         0.0f, 0.0f,
-         0.5f, 0.0f,
-         0.0f, 0.5f,
-         0.5f, 0.5f,
-         // For text coords in top face
-         0.0f, 0.5f,
-         0.5f, 0.5f,
-         0.0f, 1.0f,
-         0.5f, 1.0f,
-         // For text coords in right face
-         0.0f, 0.0f,
-         0.0f, 0.5f,
-         // For text coords in left face
-         0.5f, 0.0f,
-         0.5f, 0.5f,
-         // For text coords in bottom face
-         0.5f, 0.0f,
-         1.0f, 0.0f,
-         0.5f, 0.5f,
-         1.0f, 0.5f,};
-      int[] indices = new int[] {
-         // Front face
-         0, 1, 3, 3, 1, 2,
-         // Top Face
-         8, 10, 11, 9, 8, 11,
-         // Right face
-         12, 13, 7, 5, 12, 7,
-         // Left face
-         14, 15, 6, 4, 14, 6,
-         // Bottom face
-         16, 18, 19, 17, 16, 19,
-         // Back face
-         4, 6, 7, 5, 4, 7,};
-
-      // Now we can create a texture and the cube mesh from the data.
+      // Load the cube mesh and texture it.
+      Mesh mesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
       Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
-      Mesh mesh = new Mesh(positions, textCoords, new float[0], indices);
-      Material mat = new Material(texture, 0.5f);
+      Material mat = new Material(texture, 0.25f);
       mesh.setMaterial(mat);
 
-      // Load a test ".obj" model.
+      // Load the suzanne model.
       Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
       texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
       mat = new Material(texture, 1f);
@@ -185,18 +108,18 @@ public class CubeShooter implements IGameLogic
       graphItems.add(suzanne);
 
       // Create a simple cube floor (for test purposes).
-      for (float x = 0; x < 100; x++) {
-         for (float z = 0; z < 100; z++) {
+      for (float x = 0; x < 100; x+=2) {
+         for (float z = 0; z < 100; z+=2) {
             GraphItem graphItem = new GraphItem(mesh);
             graphItem.setPosition(x, 0, z);
             graphItems.add(graphItem);
          }
       }
 
-      // Set up scene lights.
+      // Set up the scene light.
       ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
       Vector3f lightColour = new Vector3f(1, 1, 1);
-      Vector3f lightPosition = new Vector3f(0, 5, 1);
+      Vector3f lightPosition = new Vector3f(2, 8, 2);
       float lightIntensity = 10f;
       pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
       PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
@@ -237,7 +160,6 @@ public class CubeShooter implements IGameLogic
 
    /**
     * Update one frame/tick.
-    *
     * @param delta      Time since last frame.
     * @param mouseInput Input data from the mouse.
     */
@@ -260,7 +182,6 @@ public class CubeShooter implements IGameLogic
 
    /**
     * Tell the renderer to render.
-    *
     * @param window
     */
    @Override
@@ -281,5 +202,4 @@ public class CubeShooter implements IGameLogic
          gameItem.getMesh().cleanUp();
       }
    }
-
 }

@@ -121,9 +121,6 @@ public class Window {
             glfwSwapInterval(1);
         }
 
-        // Make the window visible
-        glfwShowWindow(windowHandle);
-
         GL.createCapabilities();
 
         // Set the clear color
