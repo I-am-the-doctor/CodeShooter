@@ -43,16 +43,11 @@ public class Mesh
 
    private final int vertexCount;
 
-   /**
-    * The diffuse color.
-    */
-   private Vector3f colour;
 
    /**
-    * The diffuse texture.
-    * default: null.
+    *
     */
-   private Texture texture = null;
+   private Material material;
 
 
    /**
@@ -70,7 +65,6 @@ public class Mesh
       FloatBuffer vecNormalsBuffer = null;
       IntBuffer indicesBuffer = null;
       try {
-         colour = DEFAULT_COLOUR;
          vertexCount = indices.length;
          vboIdList = new ArrayList();
 
@@ -133,66 +127,21 @@ public class Mesh
 
 
    /**
-    * Creates a textured mesh.
+    * @return The material of this mesh.
+    */
+   public Material getMaterial() {
+      return material;
+   }
+
+
+   /**
     *
-    * @param positions
-    * @param textCoords
-    * @param normals
-    * @param indices
-    * @param texture The texture of the mesh.
+    * @param material
     */
-   public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices, Texture texture)
+   public void setMaterial(Material material)
    {
-      this(positions, textCoords, normals, indices);
-      setTexture(texture);
+      this.material = material;
    }
-
-
-
-   /**
-    * @return Wether the mesh is textured or not.
-    */
-   public boolean isTextured()
-   {
-      return this.texture != null;
-   }
-
-
-   /**
-    * @return The texture of this mesh, if any.
-    */
-   public Texture getTexture()
-   {
-      return this.texture;
-   }
-
-
-   /**
-    * @param texture The texture to be set.
-    */
-   public void setTexture(Texture texture)
-   {
-      this.texture = texture;
-   }
-
-
-   /**
-    * @param colour The new diffuse colour.
-    */
-   public void setColour(Vector3f colour)
-   {
-      this.colour = colour;
-   }
-
-
-   /**
-    * @return The diffuse colour of this mesh.
-    */
-   public Vector3f getColour()
-   {
-      return this.colour;
-   }
-
 
    /**
     * @return The VAO handle of this mesh.
@@ -217,7 +166,8 @@ public class Mesh
     */
    public void render()
    {
-      if (isTextured()) {
+      Texture texture = material.getTexture();
+      if (texture != null) {
          // Activate the first texture bank.
          glActiveTexture(GL_TEXTURE0);
          // Bind the texture.
@@ -253,8 +203,10 @@ public class Mesh
          glDeleteBuffers(vboId);
       }
 
-      if (isTextured()) {
-         // Delete the texture
+
+      Texture texture = material.getTexture();
+      if (texture != null) {
+         // Delete the texture.
          texture.cleanup();
       }
 

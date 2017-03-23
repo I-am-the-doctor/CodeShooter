@@ -6,18 +6,15 @@ import kgr.engine.GraphItem;
 import kgr.engine.IGameLogic;
 import kgr.engine.MouseInput;
 import kgr.engine.Window;
-import kgr.engine.graph.Camera;
-import kgr.engine.graph.Mesh;
-import kgr.engine.graph.ObjImporter;
-import kgr.engine.graph.Texture;
+import kgr.engine.graph.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 
 /**
- * The class with the game loop in it.
- * Updating, rendering etc…
+ * The class with the game loop in it. Updating, rendering etc…
  *
  * @author Val
  */
@@ -36,6 +33,16 @@ public class CubeShooter implements IGameLogic
    private final Renderer renderer;
 
    private final Camera camera;
+
+   /**
+    *
+    */
+   private Vector3f ambientLight;
+
+   /**
+    * A test light source.
+    */
+   private PointLight pointLight;
 
    /**
     * Temporary mesh to show some action.
@@ -162,14 +169,17 @@ public class CubeShooter implements IGameLogic
 
       // Now we can create a texture and the cube mesh from the data.
       Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
-      Mesh mesh = new Mesh(positions, textCoords, new float[0], indices, texture);
+      Mesh mesh = new Mesh(positions, textCoords, new float[0], indices);
+      Material mat = new Material(texture, 0.5f);
+      mesh.setMaterial(mat);
 
       // Load a test ".obj" model.
       Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
       texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
+      mat = new Material(texture, 1f);
+      suzanneMesh.setMaterial(mat);
 
       suzanne = new GraphItem(suzanneMesh);
-      suzanneMesh.setTexture(texture);
       suzanne.setPosition(5, 10, 5);
       suzanne.setRotation(0, 150, 0);
       graphItems.add(suzanne);
@@ -182,12 +192,22 @@ public class CubeShooter implements IGameLogic
             graphItems.add(graphItem);
          }
       }
+
+      // Set up scene lights.
+      ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
+      Vector3f lightColour = new Vector3f(1, 1, 1);
+      Vector3f lightPosition = new Vector3f(0, 5, 1);
+      float lightIntensity = 10f;
+      pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
+      PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
+      pointLight.setAttenuation(att);
    }
 
 
    /**
     * Handle all inputs.
-    * @param window Window, from which the input is coming from.
+    *
+    * @param window     Window, from which the input is coming from.
     * @param mouseInput
     */
    @Override
@@ -234,18 +254,19 @@ public class CubeShooter implements IGameLogic
       }
 
       // Rotate Suzanne a bit. :-)
-      suzanne.setRotation(suzanne.getRotation().x, suzanne.getRotation().y+1, suzanne.getRotation().z);
+      suzanne.setRotation(suzanne.getRotation().x, suzanne.getRotation().y + 1, suzanne.getRotation().z);
    }
 
 
    /**
     * Tell the renderer to render.
+    *
     * @param window
     */
    @Override
    public void render(Window window)
    {
-      renderer.render(window, camera, graphItems);
+      renderer.render(window, camera, graphItems, ambientLight, pointLight);
    }
 
 

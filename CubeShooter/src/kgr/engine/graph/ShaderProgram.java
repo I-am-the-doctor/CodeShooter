@@ -42,7 +42,7 @@ public class ShaderProgram
    {
       programId = glCreateProgram();
       if (programId == 0) {
-         throw new Exception("Could not create Shader");
+         throw new Exception("Could not create Shader!");
       }
       uniforms = new HashMap<>();
    }
@@ -62,6 +62,39 @@ public class ShaderProgram
          throw new Exception("Could not find uniform:" + uniformName);
       }
       uniforms.put(uniformName, uniformLocation);
+   }
+
+
+   /**
+    * Creates a new uniform of the PointLight type
+    *
+    * @param uniformName
+    *
+    * @throws Exception
+    */
+   public void createPointLightUniform(String uniformName) throws Exception
+   {
+      createUniform(uniformName + ".colour");
+      createUniform(uniformName + ".position");
+      createUniform(uniformName + ".intensity");
+      createUniform(uniformName + ".att.constant");
+      createUniform(uniformName + ".att.linear");
+      createUniform(uniformName + ".att.exponent");
+   }
+
+
+   /**
+    * Creates a new uniform of the Material type.
+    *
+    * @param uniformName
+    *
+    * @throws Exception
+    */
+   public void createMaterialUniform(String uniformName) throws Exception
+   {
+      createUniform(uniformName + ".colour");
+      createUniform(uniformName + ".useColour");
+      createUniform(uniformName + ".reflectance");
    }
 
 
@@ -91,6 +124,39 @@ public class ShaderProgram
    public void setUniform(String uniformName, Vector3f value)
    {
       glUniform3f(uniforms.get(uniformName), value.x, value.y, value.z);
+   }
+
+
+   /**
+    *
+    * @param uniformName
+    * @param value
+    */
+   public void setUniform(String uniformName, float value)
+   {
+      glUniform1f(uniforms.get(uniformName), value);
+   }
+
+
+   public void setUniform(String uniformName, PointLight pointLight)
+   {
+      setUniform(uniformName + ".colour", pointLight.getColor());
+      setUniform(uniformName + ".position", pointLight.getPosition());
+      setUniform(uniformName + ".intensity", pointLight.getIntensity());
+      PointLight.Attenuation att = pointLight.getAttenuation();
+      setUniform(uniformName + ".att.constant", att.getConstant());
+      setUniform(uniformName + ".att.linear", att.getLinear());
+      setUniform(uniformName + ".att.exponent", att.getExponent());
+   }
+
+
+   public void setUniform(String uniformName, Material material)
+   {
+      setUniform(uniformName + ".colour", material.getColour());
+      setUniform(uniformName + ".useColour", material.isTextured() ?
+                                             0 :
+                                             1);
+      setUniform(uniformName + ".reflectance", material.getReflectance());
    }
 
 
