@@ -6,6 +6,11 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
+/**
+ * A class that encapsulates any OpenGl texture.
+ *
+ * @author Val
+ */
 public class Texture {
 
     private final int id;
@@ -36,7 +41,7 @@ public class Texture {
         decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
         buf.flip();
 
-        // Create a new OpenGL texture 
+        // Create a new OpenGL texture
         int textureId = glGenTextures();
         // Bind the texture
         glBindTexture(GL_TEXTURE_2D, textureId);

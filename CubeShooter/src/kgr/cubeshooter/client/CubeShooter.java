@@ -9,7 +9,6 @@ import kgr.engine.Window;
 import kgr.engine.graph.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 
@@ -53,7 +52,7 @@ public class CubeShooter implements IGameLogic
    private PointLight pointLight;
 
    /**
-    * Temporary mesh to show some action.
+    * Temporary blockMesh to show some action.
     */
    private GraphItem suzanne;
 
@@ -90,16 +89,16 @@ public class CubeShooter implements IGameLogic
       graphItems = new HashSet<>();
       renderer.init(window);
 
-      // Load the cube mesh and texture it.
-      Mesh mesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
+      // Load the cube blockMesh and texture it.
+      Mesh blockMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
       Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
       Material mat = new Material(texture, 0.25f);
-      mesh.setMaterial(mat);
+      blockMesh.setMaterial(mat);
 
       // Load the suzanne model.
       Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
       texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
-      mat = new Material(texture, 1f);
+      mat = new Material(texture, 10f);
       suzanneMesh.setMaterial(mat);
 
       suzanne = new GraphItem(suzanneMesh);
@@ -110,7 +109,7 @@ public class CubeShooter implements IGameLogic
       // Create a simple cube floor (for test purposes).
       for (float x = 0; x < 100; x+=2) {
          for (float z = 0; z < 100; z+=2) {
-            GraphItem graphItem = new GraphItem(mesh);
+            GraphItem graphItem = new GraphItem(blockMesh);
             graphItem.setPosition(x, 0, z);
             graphItems.add(graphItem);
          }

@@ -94,7 +94,7 @@ public class ShaderProgram
    {
       createUniform(uniformName + ".colour");
       createUniform(uniformName + ".useColour");
-      createUniform(uniformName + ".reflectance");
+      createUniform(uniformName + ".specularPower");
    }
 
 
@@ -153,10 +153,10 @@ public class ShaderProgram
    public void setUniform(String uniformName, Material material)
    {
       setUniform(uniformName + ".colour", material.getColour());
-      setUniform(uniformName + ".useColour", material.isTextured() ?
+      setUniform(uniformName + ".useColour", material.hasDiffuseTexture() ?
                                              0 :
                                              1);
-      setUniform(uniformName + ".reflectance", material.getReflectance());
+      setUniform(uniformName + ".specularPower", material.getSpecularPower());
    }
 
 
