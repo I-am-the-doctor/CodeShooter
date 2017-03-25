@@ -27,10 +27,9 @@ public class Material {
     private Vector3f colour;
 
     /**
-     * Intensity of the reflected light (the specular component).
-     * Also called "reflectance" of this material.
+     * Reflectance factor of incoming light (the specular component).
      */
-    private float specularPower;
+    private float reflectance;
 
     /**
      * The diffuse (color) texture of this material.
@@ -47,31 +46,31 @@ public class Material {
      */
     public Material() {
         colour = DEFAULT_COLOUR;
-        specularPower = 0;
+        reflectance = 0;
     }
 
 
     /**
      *
      * @param colour
-     * @param specularPower
+     * @param reflectance
      */
-    public Material(Vector3f colour, float specularPower) {
+    public Material(Vector3f colour, float reflectance) {
         this();
         this.colour = colour;
-        this.specularPower = specularPower;
+        this.reflectance = reflectance;
     }
 
 
     /**
      *
      * @param diffuse
-     * @param specularPower
+     * @param reflectance
      */
-    public Material(Texture diffuse, float specularPower) {
+    public Material(Texture diffuse, float reflectance) {
         this();
         this.diffuseTexture = diffuse;
-        this.specularPower = specularPower;
+        this.reflectance = reflectance;
     }
 
 
@@ -94,17 +93,17 @@ public class Material {
     /**
      * @return
      */
-    public float getSpecularPower() {
-        return specularPower;
+    public float getReflectance() {
+        return reflectance;
     }
 
 
     /**
-     * @param power The new specular power for this material.
-     *              That is the intensity of reflected light.
+     * @param reflectance The new specular reflectance for this material.
+              That is the intensity of reflected light.
      */
-    public void setSpecularPower(float power) {
-        this.specularPower = power;
+    public void setReflectance(float reflectance) {
+        this.reflectance = reflectance;
     }
 
 

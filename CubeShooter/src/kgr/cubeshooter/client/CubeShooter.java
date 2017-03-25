@@ -29,12 +29,10 @@ public class CubeShooter implements IGameLogic
     */
    private final Vector3f cameraInc;
 
-
    /**
     * The renderer instance.
     */
    private final Renderer renderer;
-
 
    /**
     * The camera instance.
@@ -42,19 +40,31 @@ public class CubeShooter implements IGameLogic
    private final Camera camera;
 
    /**
-    * The color of the ambient light.
+    * The color of the ambient lightVisible.
     */
    private Vector3f ambientLight;
 
    /**
-    * A test light source.
+    * A test point lightVisible source.
     */
    private PointLight pointLight;
 
    /**
-    * Temporary blockMesh to show some action.
+    * A test directional lightVisible source.
+    */
+   private DirectionalLight directionalLight;
+   private float            lightAngle;
+
+   /**
+    * Temporary mesh to show some action.
     */
    private GraphItem suzanne;
+
+
+   /**
+    * Temporary lightVisible mesh to show the directional lightVisible position.
+    */
+   private GraphItem lightVisible;
 
    /**
     * Temporary list of all objects to render.
@@ -89,16 +99,16 @@ public class CubeShooter implements IGameLogic
       graphItems = new HashSet<>();
       renderer.init(window);
 
-      // Load the cube blockMesh and texture it.
+      // Load the cube mesh and texture it.
       Mesh blockMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
       Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
-      Material mat = new Material(texture, 0.25f);
+      Material mat = new Material(texture, 0.3f);
       blockMesh.setMaterial(mat);
 
       // Load the suzanne model.
       Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
       texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
-      mat = new Material(texture, 10f);
+      mat = new Material(texture, 5f);
       suzanneMesh.setMaterial(mat);
 
       suzanne = new GraphItem(suzanneMesh);
@@ -107,22 +117,34 @@ public class CubeShooter implements IGameLogic
       graphItems.add(suzanne);
 
       // Create a simple cube floor (for test purposes).
-      for (float x = 0; x < 100; x+=2) {
-         for (float z = 0; z < 100; z+=2) {
+      for (float x = 0; x < 100; x += 2) {
+         for (float z = 0; z < 100; z += 2) {
             GraphItem graphItem = new GraphItem(blockMesh);
             graphItem.setPosition(x, 0, z);
             graphItems.add(graphItem);
          }
       }
 
-      // Set up the scene light.
+      // Set up the scene lightVisible.
       ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
       Vector3f lightColour = new Vector3f(1, 1, 1);
-      Vector3f lightPosition = new Vector3f(2, 8, 2);
-      float lightIntensity = 10f;
-      pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
-      PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
+      Vector3f lightPosition = new Vector3f(2, 6, 2);
+      pointLight = new PointLight(lightColour, lightPosition, 10f);
+      PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 1f);
       pointLight.setAttenuation(att);
+
+      lightPosition = new Vector3f(50, 50, 100);
+      lightColour = new Vector3f(0.5f, 0.5f, 0.5f);
+      directionalLight = new DirectionalLight(lightColour, lightPosition, 2f);
+
+      // A visual representation of the lightVisible source.
+      mat = new Material(new Vector3f(10f, 9f, 9f), 0f);
+      blockMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
+      blockMesh.setMaterial(mat);
+      lightVisible = new GraphItem(blockMesh);
+      lightVisible.setScale(0.25f);
+      lightVisible.setPosition(pointLight.getPosition());
+      graphItems.add(lightVisible);
    }
 
 
@@ -159,6 +181,7 @@ public class CubeShooter implements IGameLogic
 
    /**
     * Update one frame/tick.
+    *
     * @param delta      Time since last frame.
     * @param mouseInput Input data from the mouse.
     */
@@ -176,17 +199,42 @@ public class CubeShooter implements IGameLogic
 
       // Rotate Suzanne a bit. :-)
       suzanne.setRotation(suzanne.getRotation().x, suzanne.getRotation().y + 1, suzanne.getRotation().z);
+
+      // Update directional lightVisible direction, intensity and colour.
+      lightAngle += 1.1f;
+      if (lightAngle > 90) {
+         directionalLight.setIntensity(0);
+         if (lightAngle >= 360) {
+            lightAngle = -90;
+         }
+      }
+      else if (lightAngle <= -80 || lightAngle >= 80) {
+         float factor = 1 - (Math.abs(lightAngle) - 80) / 10.0f;
+         directionalLight.setIntensity(factor);
+         directionalLight.getColour().y = Math.max(factor, 0.9f);
+         directionalLight.getColour().z = Math.max(factor, 0.5f);
+      }
+      else {
+         directionalLight.setIntensity(1);
+         directionalLight.getColour().x = 1;
+         directionalLight.getColour().y = 1;
+         directionalLight.getColour().z = 1;
+      }
+      double angRad = Math.toRadians(lightAngle);
+      directionalLight.getDirection().x = (float) Math.sin(angRad);
+      directionalLight.getDirection().y = (float) Math.cos(angRad);
    }
 
 
    /**
     * Tell the renderer to render.
+    *
     * @param window
     */
    @Override
    public void render(Window window)
    {
-      renderer.render(window, camera, graphItems, ambientLight, pointLight);
+      renderer.render(window, camera, graphItems, ambientLight, pointLight, directionalLight);
    }
 
 

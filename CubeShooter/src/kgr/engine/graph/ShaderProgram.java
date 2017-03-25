@@ -67,9 +67,7 @@ public class ShaderProgram
 
    /**
     * Creates a new uniform of the PointLight type
-    *
     * @param uniformName
-    *
     * @throws Exception
     */
    public void createPointLightUniform(String uniformName) throws Exception
@@ -81,26 +79,34 @@ public class ShaderProgram
       createUniform(uniformName + ".att.linear");
       createUniform(uniformName + ".att.exponent");
    }
+   /**
+    * Creates a new uniform of the DirectionalLight type.
+    * @param uniformName
+    * @throws Exception
+    */
+   public void createDirectionalLightUniform(String uniformName) throws Exception
+   {
+      createUniform(uniformName + ".colour");
+      createUniform(uniformName + ".direction");
+      createUniform(uniformName + ".intensity");
+   }
 
 
    /**
     * Creates a new uniform of the Material type.
-    *
     * @param uniformName
-    *
     * @throws Exception
     */
    public void createMaterialUniform(String uniformName) throws Exception
    {
       createUniform(uniformName + ".colour");
       createUniform(uniformName + ".useColour");
-      createUniform(uniformName + ".specularPower");
+      createUniform(uniformName + ".reflectance");
    }
 
 
    /**
     * Sets a matrix uniform.
-    *
     * @param uniformName Name of the uniform to be set.
     * @param value       Value of the uniform.
     */
@@ -117,7 +123,6 @@ public class ShaderProgram
 
    /**
     * Sets a float vector uniform.
-    *
     * @param uniformName Name of the uniform to be set.
     * @param value       Value of the uniform.
     */
@@ -128,7 +133,6 @@ public class ShaderProgram
 
 
    /**
-    *
     * @param uniformName
     * @param value
     */
@@ -138,6 +142,10 @@ public class ShaderProgram
    }
 
 
+   /**
+    * @param uniformName
+    * @param pointLight
+    */
    public void setUniform(String uniformName, PointLight pointLight)
    {
       setUniform(uniformName + ".colour", pointLight.getColor());
@@ -150,13 +158,29 @@ public class ShaderProgram
    }
 
 
+   /**
+    * @param uniformName
+    * @param dirLight
+    */
+   public void setUniform(String uniformName, DirectionalLight dirLight)
+   {
+      setUniform(uniformName + ".colour",    dirLight.getColour());
+      setUniform(uniformName + ".direction", dirLight.getDirection());
+      setUniform(uniformName + ".intensity", dirLight.getIntensity());
+   }
+
+
+   /**
+    * @param uniformName
+    * @param material
+    */
    public void setUniform(String uniformName, Material material)
    {
       setUniform(uniformName + ".colour", material.getColour());
       setUniform(uniformName + ".useColour", material.hasDiffuseTexture() ?
                                              0 :
                                              1);
-      setUniform(uniformName + ".specularPower", material.getSpecularPower());
+      setUniform(uniformName + ".reflectance", material.getReflectance());
    }
 
 

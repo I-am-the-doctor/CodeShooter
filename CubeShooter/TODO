@@ -8,12 +8,14 @@ General:
 
 Game:
  - basic networking
- - collision detection
- - saving/loading of maps (which format)
+ - finish collision detection
+ - saving/loading of maps
+ - implement some kind of "orbiting camera"
  - …
+ - 3D-A* pathfinding for the AI?
 
 
 Engine:
  - parsing of OBJ material (".mtl") files
- - phong shading (ambient, diffuse and specular lighting as well as texture maps)
+ - finish phong shading (specular and "glow" texture maps)
  - …

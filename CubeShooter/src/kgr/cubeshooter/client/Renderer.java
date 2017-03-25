@@ -8,7 +8,6 @@ import kgr.engine.graph.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -46,7 +45,9 @@ public class Renderer
     */
    private ShaderProgram shaderProgram;
 
-
+   /**
+    * The global specular power.
+    */
    private float specularPower;
 
 
@@ -56,7 +57,7 @@ public class Renderer
    public Renderer()
    {
       transformation = new Transformation();
-      specularPower = 10f;
+      specularPower = 5f;
    }
 
 
@@ -90,6 +91,7 @@ public class Renderer
       shaderProgram.createUniform("specularPower");
       shaderProgram.createUniform("ambientLight");
       shaderProgram.createPointLightUniform("pointLight");
+      shaderProgram.createDirectionalLightUniform("directionalLight");
 
       glClearColor(0.2f, 0.3f, 0.6f, 1);
    }
@@ -106,13 +108,15 @@ public class Renderer
 
    /**
     *
-    * @param window      The window in which to render.
+    * @param window       The window in which to render.
     * @param camera       The camera.
     * @param graphItems   Render a list of graphical items.
-    * @param ambientLight
-    * @param pointLight
+    * @param ambientLight An ambient light "source".
+    * @param pointLight   A point light source.
+    * @param dirLight     A directional light source.
     */
-   public void render(Window window, Camera camera, Collection<GraphItem> graphItems, Vector3f ambientLight, PointLight pointLight)
+   public void render(Window window, Camera camera, Collection<GraphItem> graphItems,
+                      Vector3f ambientLight, PointLight pointLight, DirectionalLight dirLight)
    {
       clear();
 
@@ -132,10 +136,10 @@ public class Renderer
 
       shaderProgram.setUniform("texture_sampler", 0);
 
-      // Update Light Uniforms
+      // Update the light uniforms.
       shaderProgram.setUniform("ambientLight", ambientLight);
       shaderProgram.setUniform("specularPower", specularPower);
-      // Get a copy of the light object and transform its position to view coordinates
+      // Get a copy of the point light object and transform its position to view coordinates.
       PointLight currPointLight = new PointLight(pointLight);
       Vector3f lightPos = currPointLight.getPosition();
       Vector4f aux = new Vector4f(lightPos, 1);
@@ -144,9 +148,17 @@ public class Renderer
       lightPos.y = aux.y;
       lightPos.z = aux.z;
       shaderProgram.setUniform("pointLight", currPointLight);
+
+      // Get a copy of the directional light object and transform its position to view coordinates.
+      DirectionalLight currDirLight = new DirectionalLight(dirLight);
+      Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
+      dir.mul(viewMatrix);
+      currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
+      shaderProgram.setUniform("directionalLight", currDirLight);
+
       shaderProgram.setUniform("texture_sampler", 0);
 
-      // Render each gameItem
+      // Render each game item.
       for (GraphItem gameItem : graphItems) {
          Mesh mesh = gameItem.getMesh();
          // Set model view matrix for this item

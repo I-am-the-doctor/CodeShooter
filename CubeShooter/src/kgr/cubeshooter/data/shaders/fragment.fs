@@ -22,11 +22,18 @@ struct PointLight
     Attenuation att;
 };
 
+struct DirectionalLight
+{
+    vec3 colour;
+    vec3 direction;
+    float intensity;
+};
+
 struct Material
 {
     vec3 colour;
     int useColour;
-    float specularPower;
+    float reflectance;
 };
 
 
@@ -35,33 +42,57 @@ uniform vec3 ambientLight;
 uniform float specularPower;
 uniform Material material;
 uniform PointLight pointLight;
+uniform DirectionalLight directionalLight;
 uniform vec3 camera_pos;
 
 
-vec4 calcPointLight(PointLight light, vec3 position, vec3 normal)
+/**
+ * Calculate the influence of a light source in general (diffuse & specular)
+ */
+vec4 calcLightColour(vec3 light_colour, float light_intensity, vec3 position, vec3 to_light_dir, vec3 normal)
 {
     vec4 diffuseColour = vec4(0, 0, 0, 0);
     vec4 specColour = vec4(0, 0, 0, 0);
 
     // Diffuse Light.
-    vec3 light_direction = light.position - position;
-    vec3 to_light_source  = normalize(light_direction);
-    float diffuseFactor = max(dot(normal, to_light_source ), 0.0);
-    diffuseColour = vec4(light.colour, 1.0) * light.intensity * diffuseFactor;
+    float diffuseFactor = max(dot(normal, to_light_dir), 0.0);
+    diffuseColour = vec4(light_colour, 1.0) * light_intensity * diffuseFactor;
 
     // Specular Light.
-    vec3 camera_direction = normalize(-position);
-    vec3 from_light_source = -to_light_source;
-    vec3 reflected_light = normalize(reflect(from_light_source, normal));
+    vec3 camera_direction = normalize(camera_pos - position);
+    vec3 from_light_dir = -to_light_dir;
+    vec3 reflected_light = normalize(reflect(from_light_dir , normal));
     float specularFactor = max( dot(camera_direction, reflected_light), 0.0);
     specularFactor = pow(specularFactor, specularPower);
-    specColour = specularFactor * material.specularPower * vec4(light.colour, 1.0);
+    specColour = light_intensity  * specularFactor * material.reflectance * vec4(light_colour, 1.0);
 
-    // Attenuation.
+    return (diffuseColour + specColour);
+}
+
+
+/**
+ * Calculate the influence of a piont light source.
+ */
+vec4 calcPointLight(PointLight light, vec3 position, vec3 normal)
+{
+    vec3 light_direction = light.position - position;
+    vec3 to_light_dir  = normalize(light_direction);
+    vec4 light_colour = calcLightColour(light.colour, light.intensity, position, to_light_dir, normal);
+
+    // Apply Attenuation
     float distance = length(light_direction);
     float attenuationInv = light.att.constant + light.att.linear * distance +
         light.att.exponent * distance * distance;
-    return (diffuseColour + specColour) / attenuationInv;
+    return light_colour / attenuationInv;
+}
+
+
+/**
+ * Calculate the influence of a directional light source.
+ */
+vec4 calcDirectionalLight(DirectionalLight light, vec3 position, vec3 normal)
+{
+    return calcLightColour(light.colour, light.intensity, position, normalize(light.direction), normal);
 }
 
 
@@ -76,10 +107,9 @@ void main()
     {
         baseColour = texture(texture_sampler, outTexCoord);
     }
-    vec4 lightColour = calcPointLight(pointLight, mvVertexPos, mvVertexNormal);
-
     vec4 totalLight = vec4(ambientLight, 1.0);
-    totalLight += lightColour;
+    totalLight += calcDirectionalLight(directionalLight, mvVertexPos, mvVertexNormal);
+    totalLight += calcPointLight(pointLight, mvVertexPos, mvVertexNormal);
 
     fragColor = baseColour * totalLight;
 }
