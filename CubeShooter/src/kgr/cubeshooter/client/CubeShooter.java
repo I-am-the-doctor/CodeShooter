@@ -105,36 +105,38 @@ public class CubeShooter implements IGameLogic
 
       // Create a simple cube floor (for test purposes).
       Random rand = new Random();
-      for (float x = 0; x < 100; x += 2) {
-         for (float z = 0; z < 100; z += 2) {
+      for (float x = 0; x < 50; x++) {
+         for (float z = 0; z < 50; z++) {
             GraphItem graphItem = new GraphItem(blockMesh);
-            graphItem.setPosition(x, 0, z);
+            graphItem.setPosition(2*x, 0, 2*z);
             graphItems.add(graphItem);
             // Randomly place cubes on the second "level".
             if (rand.nextInt(2) > 0) {
                graphItem = new GraphItem(blockMesh);
-               graphItem.setPosition(x, 2, z);
+               graphItem.setPosition(2*x, 2, 2*z);
                graphItems.add(graphItem);
             }
          }
       }
 
-      // Set up a few point lights.
+      // Set up the ambient light and a few point lights.
       ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
-      Vector3f lightColour = new Vector3f(1, 1, 1);
+      Vector3f lightColour = new Vector3f(0.7, 0.5, 0.5);
       Vector3f lightPosition = new Vector3f(2, 6, 2);
       pointLights = new PointLight[MAX_POINT_LIGHTS];
       for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
          pointLights[i] = new PointLight(lightColour, lightPosition, 10f);
          PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 1f);
          pointLights[i].setAttenuation(att);
-         lightPosition.add(10f, 10f, 10f);
+         lightPosition = new Vector3f(2*i, 6, 2*i);
+         lightColour   = new Vector3f(0.7+i/100, 0.5, 0.5);
       }
 
       // Initialize the directional (sun) light.
       lightPosition = new Vector3f(50, 50, 100);
       lightColour = new Vector3f(0.5f, 0.4f, 0.4f);
-      directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);   }
+      directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);   
+   }
 
 
    /**
