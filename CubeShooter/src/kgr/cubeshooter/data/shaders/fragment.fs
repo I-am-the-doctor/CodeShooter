@@ -1,5 +1,7 @@
 #version 330
 
+const int MAX_POINT_LIGHTS = 16;
+
 in vec2 outTexCoord;
 in vec3 mvVertexNormal;
 in vec3 mvVertexPos;
@@ -41,7 +43,7 @@ uniform sampler2D texture_sampler;
 uniform vec3 ambientLight;
 uniform float specularPower;
 uniform Material material;
-uniform PointLight pointLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform DirectionalLight directionalLight;
 uniform vec3 camera_pos;
 
@@ -109,7 +111,15 @@ void main()
     }
     vec4 totalLight = vec4(ambientLight, 1.0);
     totalLight += calcDirectionalLight(directionalLight, mvVertexPos, mvVertexNormal);
-    totalLight += calcPointLight(pointLight, mvVertexPos, mvVertexNormal);
+
+   for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+   {
+       if ( pointLights[i].intensity > 0 )
+       {
+           totalLight += calcPointLight(pointLights[i], mvVertexPos, mvVertexNormal);
+       }
+   }
+
 
     fragColor = baseColour * totalLight;
 }

@@ -106,6 +106,19 @@ public class ShaderProgram
 
 
    /**
+    * 
+    * @param uniformName
+    * @param size
+    * @throws Exception
+    */
+   public void createPointLightListUniform(String uniformName, int size) throws Exception {
+       for (int i = 0; i < size; i++) {
+           createPointLightUniform(uniformName + "[" + i + "]");
+       }
+   }
+
+
+   /**
     * Sets a matrix uniform.
     * @param uniformName Name of the uniform to be set.
     * @param value       Value of the uniform.
@@ -181,6 +194,30 @@ public class ShaderProgram
                                              0 :
                                              1);
       setUniform(uniformName + ".reflectance", material.getReflectance());
+   }
+
+
+   /**
+    *
+    * @param uniformName
+    * @param pointLights
+    */
+   public void setUniform(String uniformName, PointLight[] pointLights) {
+       int numLights = pointLights != null ? pointLights.length : 0;
+       for (int i = 0; i < numLights; i++) {
+           setUniform(uniformName, pointLights[i], i);
+       }
+   }
+
+
+   /**
+    *
+    * @param uniformName
+    * @param pointLight
+    * @param pos
+    */
+   public void setUniform(String uniformName, PointLight pointLight, int pos) {
+       setUniform(uniformName + "[" + pos + "]", pointLight);
    }
 
 

@@ -8,11 +8,9 @@ import kgr.engine.graph.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glViewport;
+import org.lwjgl.opengl.GL11;
+import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
+import static org.lwjgl.opengl.GL11.*;
 
 
 /**
@@ -90,10 +88,12 @@ public class Renderer
       // Create lighting related uniforms
       shaderProgram.createUniform("specularPower");
       shaderProgram.createUniform("ambientLight");
-      shaderProgram.createPointLightUniform("pointLight");
+      shaderProgram.createPointLightListUniform("pointLights", MAX_POINT_LIGHTS);
       shaderProgram.createDirectionalLightUniform("directionalLight");
 
       glClearColor(0.2f, 0.3f, 0.6f, 1);
+      glEnable(GL11.GL_CULL_FACE);
+      glCullFace(GL_BACK);
    }
 
 
@@ -112,11 +112,11 @@ public class Renderer
     * @param camera       The camera.
     * @param graphItems   Render a list of graphical items.
     * @param ambientLight An ambient light "source".
-    * @param pointLight   A point light source.
+    * @param pointLights
     * @param dirLight     A directional light source.
     */
    public void render(Window window, Camera camera, Collection<GraphItem> graphItems,
-                      Vector3f ambientLight, PointLight pointLight, DirectionalLight dirLight)
+                      Vector3f ambientLight, PointLight pointLights[], DirectionalLight dirLight)
    {
       clear();
 
@@ -136,18 +136,8 @@ public class Renderer
 
       shaderProgram.setUniform("texture_sampler", 0);
 
-      // Update the light uniforms.
-      shaderProgram.setUniform("ambientLight", ambientLight);
-      shaderProgram.setUniform("specularPower", specularPower);
-      // Get a copy of the point light object and transform its position to view coordinates.
-      PointLight currPointLight = new PointLight(pointLight);
-      Vector3f lightPos = currPointLight.getPosition();
-      Vector4f aux = new Vector4f(lightPos, 1);
-      aux.mul(viewMatrix);
-      lightPos.x = aux.x;
-      lightPos.y = aux.y;
-      lightPos.z = aux.z;
-      shaderProgram.setUniform("pointLight", currPointLight);
+      // Render all lights.
+      renderLights(viewMatrix, ambientLight, pointLights, dirLight);
 
       // Get a copy of the directional light object and transform its position to view coordinates.
       DirectionalLight currDirLight = new DirectionalLight(dirLight);
@@ -170,6 +160,42 @@ public class Renderer
       }
 
       shaderProgram.unbind();
+   }
+
+
+   /**
+    *
+    * @param viewMatrix
+    * @param ambientLight
+    * @param pointLightList
+    * @param directionalLight
+    */
+    private void renderLights(Matrix4f viewMatrix, Vector3f ambientLight,
+            PointLight[] pointLightList, DirectionalLight directionalLight) {
+
+        shaderProgram.setUniform("ambientLight", ambientLight);
+        shaderProgram.setUniform("specularPower", specularPower);
+
+        // Process Point Lights
+        int numLights = pointLightList != null ? pointLightList.length : 0;
+        for (int i = 0; i < numLights; i++) {
+            // Get a copy of the point light object and transform its position to view coordinates
+            PointLight currPointLight = new PointLight(pointLightList[i]);
+            Vector3f lightPos = currPointLight.getPosition();
+            Vector4f aux = new Vector4f(lightPos, 1);
+            aux.mul(viewMatrix);
+            lightPos.x = aux.x;
+            lightPos.y = aux.y;
+            lightPos.z = aux.z;
+            shaderProgram.setUniform("pointLights", currPointLight, i);
+        }
+
+        // Get a copy of the directional light object and transform its position to view coordinates
+        DirectionalLight currDirLight = new DirectionalLight(directionalLight);
+        Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
+        dir.mul(viewMatrix);
+        currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
+        shaderProgram.setUniform("directionalLight", currDirLight);
    }
 
 
