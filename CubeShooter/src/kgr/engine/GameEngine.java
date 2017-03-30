@@ -24,6 +24,8 @@ public class GameEngine implements Runnable {
 
 	private final Input input;
 
+   private double lastFpsTime;
+
 
 	/**
 	 * Creates a new instance of the game engine which runs a new thread for the loop.
@@ -105,6 +107,11 @@ public class GameEngine implements Runnable {
 		while (running & !window.windowShouldClose()) {
 			elapsedTime = timer.getElapsedTime();
 
+          if (timer.getTime() - lastFpsTime > 1) {
+              System.out.println("FPS: " + 1/elapsedTime);
+              lastFpsTime = timer.getTime();
+          }
+
 			input();
 
 			update(elapsedTime);
@@ -133,7 +140,7 @@ public class GameEngine implements Runnable {
 	private void sync() {
 		final float loopSlot = 1f / TARGET_FPS;
 		final double endTime = timer.getLastLoopTime() + loopSlot;
-				
+
 		try {
 			Thread.sleep((long) (endTime - timer.getTime()));
 		} catch (InterruptedException ex) {
