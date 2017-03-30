@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
+import kgr.cubeshooter.world.World;
 import static org.lwjgl.opengl.GL11.*;
 
 
@@ -116,7 +117,8 @@ public class Renderer
     * @param dirLight     A directional light source.
     */
    public void render(Window window, Camera camera, Collection<GraphItem> graphItems,
-                      Vector3f ambientLight, PointLight pointLights[], DirectionalLight dirLight)
+                      Vector3f ambientLight, PointLight pointLights[], DirectionalLight dirLight,
+					  World world)
    {
       clear();
 
@@ -158,6 +160,8 @@ public class Renderer
          shaderProgram.setUniform("material", mesh.getMaterial());
          mesh.render();
       }
+	  
+	  world.draw();
 
       shaderProgram.unbind();
    }

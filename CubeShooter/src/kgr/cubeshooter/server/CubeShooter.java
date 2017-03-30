@@ -9,7 +9,7 @@ package kgr.cubeshooter.server;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import kgr.cubeshooter.Network;
-import kgr.cubeshooter.server.world.World;
+import kgr.cubeshooter.world.World;
 import kgr.cubeshooter.world.Physics;
 import kgr.engine.Timer;
 

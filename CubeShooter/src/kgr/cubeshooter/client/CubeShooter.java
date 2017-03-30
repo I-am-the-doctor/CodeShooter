@@ -13,6 +13,9 @@ import org.joml.Vector3f;
 import static kgr.cubeshooter.Constants.CAMERA_POS_STEP;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
 import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
+import kgr.cubeshooter.Network;
+import kgr.cubeshooter.world.World;
+import kgr.cubeshooter.world.Physics;
 import static org.lwjgl.glfw.GLFW.*;
 
 
@@ -63,7 +66,18 @@ public class CubeShooter implements IGameLogic
      * Temporary list of all objects to render.
      */
     private Set<GraphItem> graphItems;
-
+	
+	/**
+	 * The world with all objects
+	 */
+	private World world;
+	
+	/**
+	 * Represents the network connection.
+	 * It must be initialized with a ClientNetwork object.
+	 */
+	private Network network;
+	
 
     /**
      * Creates a new instance.
@@ -73,6 +87,8 @@ public class CubeShooter implements IGameLogic
         renderer = new Renderer();
         camera = new Camera(new Vector3f(-5, 10, -5), new Vector3f(20, 135, 0));
         cameraInc = new Vector3f(0, 0, 0);
+		network = new ClientNetwork();
+		world = new World(new Physics());
     }
 
 
@@ -174,17 +190,19 @@ public class CubeShooter implements IGameLogic
      * Update one frame/tick.
      *
      * @param delta      Time since last frame.
-     * @param mouseInput Input data from the mouse.
+     * @param input		Input data from the mouse and keyboard.
      */
     @Override
-    public void update(float delta, MouseInput mouseInput)
+    public void update(float delta, Input input)
     {
+		world.tick(input, lightAngle);
+		
         // Update camera position.
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 
         // Update camera based on mouse.
-        if (mouseInput.isRightButtonPressed()) {
-            Vector2f rotVec = mouseInput.getDisplVec();
+        if (input.isRightButtonPressed()) {
+            Vector2f rotVec = input.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
         }
 
@@ -225,7 +243,7 @@ public class CubeShooter implements IGameLogic
     @Override
     public void render(Window window)
     {
-        renderer.render(window, camera, graphItems, ambientLight, pointLights, directionalLight);
+        renderer.render(window, camera, graphItems, ambientLight, pointLights, directionalLight, world);
     }
 
 

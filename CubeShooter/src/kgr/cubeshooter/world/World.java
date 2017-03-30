@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.server.world;
+package kgr.cubeshooter.world;
 
 import java.util.Iterator;
 import java.util.List;
 import javax.xml.parsers.*;
 import kgr.cubeshooter.INetworkable;
 import kgr.cubeshooter.Network;
-import kgr.cubeshooter.world.Physics;
 import kgr.cubeshooter.world.entities.ICollideable;
 import kgr.cubeshooter.world.entities.IDrawable;
 import kgr.cubeshooter.world.entities.ITickable;
@@ -38,9 +37,9 @@ public class World implements IDrawable, INetworkable {
 	public void load(String file) {
 		this.file = file;
 		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(file);
+		//DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		//DocumentBuilder builder = factory.newDocumentBuilder();
+		//Document document = builder.parse(file);
 		
 	}
 	
@@ -56,7 +55,7 @@ public class World implements IDrawable, INetworkable {
 	public void reload() {
 		String file = this.file;
 		unload();
-		reload(file);
+		load(file);
 	}
 	
 	String getFile() {
@@ -104,10 +103,6 @@ public class World implements IDrawable, INetworkable {
 		}
 	}
 	
-	/**
-	 * Adds the entity to the world and checks if it implements ICollideable or ITickable and adds to the needed lists.
-	 * @param drawable 
-	 */
 	public void addDrawable(IDrawable drawable) {
 		this.drawableList.add(drawable);
 	}
@@ -118,5 +113,9 @@ public class World implements IDrawable, INetworkable {
 	
 	public void addTickable(ITickable tickable) {
 		this.tickableList.add(tickable);
+	}
+	
+	public void addNetworkable(INetworkable networkable) {
+		this.networkableList.add(networkable);
 	}
 }
