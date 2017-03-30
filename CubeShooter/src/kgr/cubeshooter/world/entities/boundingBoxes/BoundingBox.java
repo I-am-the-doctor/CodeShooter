@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.entities.boundingBoxes;
+package kgr.cubeshooter.world.entities.boundingBoxes;
 
 import org.joml.Vector3f;
 

@@ -7,71 +7,109 @@ package kgr.cubeshooter.server.world;
 
 import java.util.Iterator;
 import java.util.List;
-import kgr.cubeshooter.server.world.entities.Entity;
-import kgr.cubeshooter.entities.ICollideable;
-import kgr.cubeshooter.entities.ITickable;
+import javax.xml.parsers.*;
+import kgr.cubeshooter.INetworkable;
+import kgr.cubeshooter.Network;
+import kgr.cubeshooter.world.Physics;
+import kgr.cubeshooter.world.entities.ICollideable;
+import kgr.cubeshooter.world.entities.IDrawable;
+import kgr.cubeshooter.world.entities.ITickable;
+import org.w3c.dom.Document;
 
 /**
  *
  * @author Benjamin
  */
-public class World {
+public class World implements IDrawable, INetworkable {
 	
 	protected String file;
 	
-	protected List<Entity> entityList;
+	protected Physics physics;
+	
+	protected List<IDrawable> drawableList;
 	protected List<ICollideable> collideableList;
 	protected List<ITickable> tickableList;
+	protected List<INetworkable> networkableList; 
+	
+	public World(Physics physics) {
+		this.physics = physics;
+	}
 	
 	public void load(String file) {
 		this.file = file;
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(file);
+		
 	}
 	
 	public void unload() {
-		file = "";
+		this.file = "";
 		
-		entityList.clear();
-		collideableList.clear();
-		tickableList.clear();
+		this.drawableList.clear();
+		this.collideableList.clear();
+		this.tickableList.clear();
+		this.networkableList.clear();
 	}
 	
 	public void reload() {
-		
+		String file = this.file;
+		unload();
+		reload(file);
 	}
 	
 	String getFile() {
 		return this.file;
 	}
 	
-	public void tick(int milliseconds) {
-		this.tickableList.forEach((tickable) -> {
-			tickable.tick(milliseconds);
-		});
+	@Override
+	public void init() {
+		for (IDrawable drawable :this.drawableList) {
+			drawable.init();
+		}
+	}
+	
+	@Override
+	public void deinit() {
+		for (IDrawable drawable :this.drawableList) {
+			drawable.deinit();
+		}
+	}
+	
+	public void tick(Network network, float milliseconds) {
+		for (ITickable tickable :this.tickableList) {
+			tickable.tick(physics, milliseconds);
+		}
 		
 		for (Iterator<ICollideable> it_1 = this.collideableList.iterator(); it_1.hasNext();) {
 			ICollideable collidable = it_1.next();
 			for (Iterator<ICollideable> it_2 = it_1; it_2.hasNext();) {
-				collidable.collide(it_2.next());
+				this.physics.collide(collidable, it_2.next());
 			}
 		}
-		
-		// TODO send data to clients
+	}
+	
+	@Override
+	public void writeNetworkData(Network network) {
+		for (INetworkable networkable :this.networkableList) {
+			networkable.writeNetworkData(network);
+		}
+	}
+	
+	@Override
+	public void draw() {
+		for (IDrawable drawable :this.drawableList) {
+			drawable.draw();
+		}
 	}
 	
 	/**
 	 * Adds the entity to the world and checks if it implements ICollideable or ITickable and adds to the needed lists.
-	 * @param entity 
+	 * @param drawable 
 	 */
-	public void addEntity(Entity entity) {
-		this.entityList.add(entity);
-		
-		if (entity instanceof ICollideable) {
-			addCollideable((ICollideable) entity);
-		}
-		
-		if (entity instanceof ITickable) {
-			addTickable((ITickable) entity);
-		}
+	public void addDrawable(IDrawable drawable) {
+		this.drawableList.add(drawable);
 	}
 	
 	public void addCollideable(ICollideable collideable) {

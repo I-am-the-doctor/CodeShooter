@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.entities;
+package kgr.cubeshooter.world.entities;
+
+import kgr.cubeshooter.world.Physics;
 
 /**
  *
@@ -11,5 +13,5 @@ package kgr.cubeshooter.entities;
  */
 public interface ITickable {
 	
-	public void tick(int milliseconds);
+	public void tick(Physics physics, float milliseconds);
 }

@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kgr.cubeshooter.entities;
+package kgr.cubeshooter.world.entities;
 
-import kgr.cubeshooter.entities.boundingBoxes.BoundingBox;
+import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
 
 /**
  *
  * @author Benjamin
  */
 public interface ICollideable {
-	
-	public void collide(ICollideable collider);
 	
 	public BoundingBox getBoundingBox();
 	
