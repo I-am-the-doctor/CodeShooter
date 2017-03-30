@@ -180,6 +180,9 @@ public class Renderer
         int numLights = pointLightList != null ? pointLightList.length : 0;
         for (int i = 0; i < numLights; i++) {
             // Get a copy of the point light object and transform its position to view coordinates
+           if (pointLightList[i] == null) {
+              continue;
+           }
             PointLight currPointLight = new PointLight(pointLightList[i]);
             Vector3f lightPos = currPointLight.getPosition();
             Vector4f aux = new Vector4f(lightPos, 1);

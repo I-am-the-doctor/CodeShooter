@@ -124,7 +124,7 @@ public class CubeShooter implements IGameLogic
       Vector3f lightColour = new Vector3f(0.7f, 0.5f, 0.5f);
       Vector3f lightPosition = new Vector3f(2, 6, 2);
       pointLights = new PointLight[MAX_POINT_LIGHTS];
-      for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
+      for (int i = 0; i < MAX_POINT_LIGHTS-5; i++) {
          pointLights[i] = new PointLight(lightColour, lightPosition, 10f);
          PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 1f);
          pointLights[i].setAttenuation(att);
