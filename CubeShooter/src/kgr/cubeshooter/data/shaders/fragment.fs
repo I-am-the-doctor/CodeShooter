@@ -1,20 +1,125 @@
 #version 330
 
-in  vec2 outTexCoord;
+const int MAX_POINT_LIGHTS = 16;
+
+in vec2 outTexCoord;
+in vec3 mvVertexNormal;
+in vec3 mvVertexPos;
 out vec4 fragColor;
 
+
+struct Attenuation
+{
+    float constant;
+    float linear;
+    float exponent;
+};
+
+struct PointLight
+{
+    vec3 colour;
+    // Light position should be in view coordinates
+    vec3 position;
+    float intensity;
+    Attenuation att;
+};
+
+struct DirectionalLight
+{
+    vec3 colour;
+    vec3 direction;
+    float intensity;
+};
+
+struct Material
+{
+    vec3 colour;
+    int useColour;
+    float reflectance;
+};
+
+
 uniform sampler2D texture_sampler;
-uniform vec3 colour;
-uniform int useColour;
+uniform vec3 ambientLight;
+uniform float specularPower;
+uniform Material material;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform DirectionalLight directionalLight;
+uniform vec3 camera_pos;
+
+
+/**
+ * Calculate the influence of a light source in general (diffuse & specular)
+ */
+vec4 calcLightColour(vec3 light_colour, float light_intensity, vec3 position, vec3 to_light_dir, vec3 normal)
+{
+    vec4 diffuseColour = vec4(0, 0, 0, 0);
+    vec4 specColour = vec4(0, 0, 0, 0);
+
+    // Diffuse Light.
+    float diffuseFactor = max(dot(normal, to_light_dir), 0.0);
+    diffuseColour = vec4(light_colour, 1.0) * light_intensity * diffuseFactor;
+
+    // Specular Light.
+    vec3 camera_direction = normalize(camera_pos - position);
+    vec3 from_light_dir = -to_light_dir;
+    vec3 reflected_light = normalize(reflect(from_light_dir , normal));
+    float specularFactor = max( dot(camera_direction, reflected_light), 0.0);
+    specularFactor = pow(specularFactor, specularPower);
+    specColour = light_intensity  * specularFactor * material.reflectance * vec4(light_colour, 1.0);
+
+    return (diffuseColour + specColour);
+}
+
+
+/**
+ * Calculate the influence of a piont light source.
+ */
+vec4 calcPointLight(PointLight light, vec3 position, vec3 normal)
+{
+    vec3 light_direction = light.position - position;
+    vec3 to_light_dir  = normalize(light_direction);
+    vec4 light_colour = calcLightColour(light.colour, light.intensity, position, to_light_dir, normal);
+
+    // Apply Attenuation
+    float distance = length(light_direction);
+    float attenuationInv = light.att.constant + light.att.linear * distance +
+        light.att.exponent * distance * distance;
+    return light_colour / attenuationInv;
+}
+
+
+/**
+ * Calculate the influence of a directional light source.
+ */
+vec4 calcDirectionalLight(DirectionalLight light, vec3 position, vec3 normal)
+{
+    return calcLightColour(light.colour, light.intensity, position, normalize(light.direction), normal);
+}
+
 
 void main()
 {
-    if ( useColour == 1 )
+    vec4 baseColour;
+    if ( material.useColour == 1 )
     {
-        fragColor = vec4(colour, 1);
+        baseColour = vec4(material.colour, 1);
     }
     else
     {
-        fragColor = texture(texture_sampler, outTexCoord);
+        baseColour = texture(texture_sampler, outTexCoord);
     }
+    vec4 totalLight = vec4(ambientLight, 1.0);
+    totalLight += calcDirectionalLight(directionalLight, mvVertexPos, mvVertexNormal);
+
+   for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+   {
+       if ( pointLights[i].intensity > 0 )
+       {
+           totalLight += calcPointLight(pointLights[i], mvVertexPos, mvVertexNormal);
+       }
+   }
+
+
+    fragColor = baseColour * totalLight;
 }

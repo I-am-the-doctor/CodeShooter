@@ -1,5 +1,7 @@
 package kgr.engine;
 
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+
 
 /**
  * The class which calls the game loop etc.
@@ -73,17 +75,21 @@ public class GameEngine implements Runnable {
 	}
 
 
-	/**
-	 * Initialize everything.
-	 *
-	 * @throws Exception If something bad happens :-)
-	 */
-	protected void init() throws Exception {
-		window.init();
-		timer.init();
-		mouseInput.init(window);
-		gameLogic.init(window);
-	}
+   /**
+    * Initialize everything.
+    *
+    * @throws Exception If something bad happens :-)
+    */
+   protected void init() throws Exception
+   {
+      window.init();
+      timer.init();
+      mouseInput.init(window);
+      gameLogic.init(window);
+
+      // Make the window visible after everything is initialized.
+      glfwShowWindow(window.getWindowHandle());
+   }
 
 
 	/**
