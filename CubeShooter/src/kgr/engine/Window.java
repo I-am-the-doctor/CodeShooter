@@ -1,11 +1,9 @@
 package kgr.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -30,12 +28,6 @@ public class Window {
     private int height;
 
     private long windowHandle;
-
-    private GLFWErrorCallback errorCallback;
-
-    private GLFWKeyCallback keyCallback;
-
-    private GLFWWindowSizeCallback windowSizeCallback;
 
     private boolean resized;
 
@@ -63,7 +55,7 @@ public class Window {
     public void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
-        glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+        glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit()) {
@@ -85,22 +77,12 @@ public class Window {
         }
 
         // Setup resize callback.
-        glfwSetWindowSizeCallback(windowHandle, windowSizeCallback = new GLFWWindowSizeCallback() {
+        glfwSetWindowSizeCallback(windowHandle, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
                 Window.this.width = width;
                 Window.this.height = height;
                 Window.this.setResized(true);
-            }
-        });
-
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(windowHandle, keyCallback = new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                    glfwSetWindowShouldClose(window, true);
-                }
             }
         });
 
@@ -134,10 +116,6 @@ public class Window {
 
     public void setClearColor(float r, float g, float b, float alpha) {
         glClearColor(r, g, b, alpha);
-    }
-
-    public boolean isKeyPressed(int keyCode) {
-        return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
 
     public boolean windowShouldClose() {

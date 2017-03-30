@@ -4,7 +4,9 @@ import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -12,13 +14,15 @@ import static org.lwjgl.glfw.GLFW.*;
  *
  * @author Val
  */
-public class MouseInput {
+public class Input {
 
     private final Vector2d previousPos;
 
     private final Vector2d currentPos;
 
     private final Vector2f displVec;
+
+    private long windowHandle;
 
     private boolean inWindow = false;
 
@@ -32,7 +36,9 @@ public class MouseInput {
 
     private GLFWMouseButtonCallback mouseButtonCallback;
 
-    public MouseInput() {
+    private GLFWKeyCallback keyCallback;
+
+    public Input() {
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
@@ -42,8 +48,12 @@ public class MouseInput {
      * Add the mouse input listeners to the window.
      * @param window Window which listens to input.
      */
-    public void init(Window window) {
-        glfwSetCursorPosCallback(window.getWindowHandle(), cursorPosCallback = new GLFWCursorPosCallback() {
+    public void init(Window window)
+    {
+        windowHandle = window.getWindowHandle();
+
+        glfwSetCursorPosCallback(window.getWindowHandle(),
+                                 cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
                 currentPos.x = xpos;
@@ -61,6 +71,16 @@ public class MouseInput {
             public void invoke(long window, int button, int action, int mods) {
                 leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
                 rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
+            }
+        });
+
+        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(windowHandle, new GLFWKeyCallback() {
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                    glfwSetWindowShouldClose(window, true);
+                }
             }
         });
     }
@@ -90,11 +110,28 @@ public class MouseInput {
         previousPos.y = currentPos.y;
     }
 
+
+    /**
+     * @return Whether the left mouse button is pressed.
+     */
     public boolean isLeftButtonPressed() {
         return leftButtonPressed;
     }
 
+
+    /**
+     * @return Whether the left mouse button is pressed.
+     */
     public boolean isRightButtonPressed() {
         return rightButtonPressed;
+    }
+
+
+    /**
+     * @param keyCode Code of the key which is tested.
+     * @return Whether the key with the keyCode is pressed.
+     */
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
 }

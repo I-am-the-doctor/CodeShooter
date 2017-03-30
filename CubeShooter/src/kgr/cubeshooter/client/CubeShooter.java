@@ -5,11 +5,12 @@ import java.util.Random;
 import java.util.Set;
 import kgr.engine.GraphItem;
 import kgr.engine.IGameLogic;
-import kgr.engine.MouseInput;
+import kgr.engine.Input;
 import kgr.engine.Window;
 import kgr.engine.graph.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
 import static kgr.cubeshooter.Constants.CAMERA_POS_STEP;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
 import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
@@ -143,28 +144,28 @@ public class CubeShooter implements IGameLogic
      * Handle all inputs.
      *
      * @param window     Window, from which the input is coming from.
-     * @param mouseInput
+     * @param input
      */
     @Override
-    public void input(Window window, MouseInput mouseInput)
+    public void input(Window window, Input input)
     {
         cameraInc.set(0, 0, 0);
-        if (window.isKeyPressed(GLFW_KEY_W)) {
+        if (input.isKeyPressed(GLFW_KEY_W)) {
             cameraInc.z = -1;
         }
-        else if (window.isKeyPressed(GLFW_KEY_S)) {
+        else if (input.isKeyPressed(GLFW_KEY_S)) {
             cameraInc.z = 1;
         }
-        if (window.isKeyPressed(GLFW_KEY_A)) {
+        if (input.isKeyPressed(GLFW_KEY_A)) {
             cameraInc.x = -1;
         }
-        else if (window.isKeyPressed(GLFW_KEY_D)) {
+        else if (input.isKeyPressed(GLFW_KEY_D)) {
             cameraInc.x = 1;
         }
-        if (window.isKeyPressed(GLFW_KEY_Z)) {
+        if (input.isKeyPressed(GLFW_KEY_Z)) {
             cameraInc.y = -1;
         }
-        else if (window.isKeyPressed(GLFW_KEY_X)) {
+        else if (input.isKeyPressed(GLFW_KEY_X)) {
             cameraInc.y = 1;
         }
     }
@@ -177,7 +178,7 @@ public class CubeShooter implements IGameLogic
      * @param mouseInput Input data from the mouse.
      */
     @Override
-    public void update(float delta, MouseInput mouseInput)
+    public void update(float delta, Input mouseInput)
     {
         // Update camera position.
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
