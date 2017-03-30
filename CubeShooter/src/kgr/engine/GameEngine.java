@@ -22,7 +22,7 @@ public class GameEngine implements Runnable {
 
 	private final IGameLogic gameLogic;
 
-	private final MouseInput mouseInput;
+	private final Input input;
 
 
 	/**
@@ -39,7 +39,7 @@ public class GameEngine implements Runnable {
 	public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
 		gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
 		window = new Window(windowTitle, width, height, vSync);
-		mouseInput = new MouseInput();
+		input = new Input();
 		this.gameLogic = gameLogic;
 		timer = new Timer();
 	}
@@ -84,7 +84,7 @@ public class GameEngine implements Runnable {
    {
       window.init();
       timer.init();
-      mouseInput.init(window);
+      input.init(window);
       gameLogic.init(window);
 
       // Make the window visible after everything is initialized.
@@ -145,8 +145,8 @@ public class GameEngine implements Runnable {
 	 * Invoke input methods.
 	 */
 	protected void input() {
-		mouseInput.input(window);
-		gameLogic.input(window, mouseInput);
+		input.input(window);
+		gameLogic.input(window, input);
 	}
 
 
@@ -156,7 +156,7 @@ public class GameEngine implements Runnable {
 	 * @param delta Elapsed time.
 	 */
 	protected void update(float delta) {
-		gameLogic.update(delta, mouseInput);
+		gameLogic.update(delta, input);
 	}
 
 
