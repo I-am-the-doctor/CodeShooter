@@ -6,6 +6,7 @@
 package kgr.cubeshooter.world.entities;
 
 import kgr.cubeshooter.world.Physics;
+import kgr.engine.Input;
 
 /**
  *
@@ -13,5 +14,5 @@ import kgr.cubeshooter.world.Physics;
  */
 public interface ITickable {
 	
-	public void tick(Physics physics, float milliseconds);
+	public void tick(Physics physics, Input input, float milliseconds);
 }

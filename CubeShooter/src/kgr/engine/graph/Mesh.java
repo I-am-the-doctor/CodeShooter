@@ -173,7 +173,7 @@ public class Mesh
          // Bind the texture.
          glBindTexture(GL_TEXTURE_2D, texture.getId());
       }
-
+	  
       // Draw the mesh itself.
       glBindVertexArray(getVaoId());
       glEnableVertexAttribArray(0);

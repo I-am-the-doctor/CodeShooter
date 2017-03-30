@@ -3,23 +3,24 @@ package kgr.engine;
 import kgr.engine.graph.Mesh;
 import org.joml.Vector3f;
 
-public class GraphItem {
+public class GraphItem implements IGraphItem {
 
     private final Mesh mesh;
 
     private final Vector3f position;
 
-    private float scale;
+    private final Vector3f scale;
 
     private final Vector3f rotation;
 
     public GraphItem(Mesh mesh) {
         this.mesh = mesh;
-        position = new Vector3f(0, 0, 0);
-        scale = 1;
-        rotation = new Vector3f(0, 0, 0);
+        this.position = new Vector3f(0, 0, 0);
+        this.scale = new Vector3f(1, 1, 1);
+        this.rotation = new Vector3f(0, 0, 0);
     }
 
+	@Override
     public Vector3f getPosition() {
         return position;
     }
@@ -35,14 +36,22 @@ public class GraphItem {
        setPosition(pos.x, pos.y, pos.z);
     }
 
-    public float getScale() {
+	@Override
+    public Vector3f getScale() {
         return scale;
     }
 
-    public void setScale(float scale) {
-        this.scale = scale;
+    public void setScale(Vector3f scale) {
+		setScale(scale.x, scale.y, scale.z);
+    }
+	
+    public void setScale(float scaleX, float scaleY, float scaleZ) {
+        this.scale.x = scaleX;
+        this.scale.y = scaleY;
+        this.scale.z = scaleZ;
     }
 
+	@Override
     public Vector3f getRotation() {
         return rotation;
     }
@@ -57,7 +66,17 @@ public class GraphItem {
        setRotation(rot.x, rot.y, rot.z);
     }
 
+	@Override
     public Mesh getMesh() {
         return mesh;
     }
+
+	@Override
+	public void init() {
+	}
+
+	@Override
+	public void deinit() {
+		mesh.cleanUp();
+	}
 }

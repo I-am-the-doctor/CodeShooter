@@ -41,7 +41,7 @@ public class CubeShooter {
 		while (!finished) {
 			float elapsedTime = timer.getElapsedTime();
 			
-			this.world.tick(this.network, elapsedTime);
+			//this.world.tick(input, elapsedTime);
 			this.world.writeNetworkData(this.network);
 			this.network.flush();
 			

@@ -5,53 +5,81 @@
  */
 package kgr.cubeshooter.world;
 
-import kgr.cubeshooter.world.entities.ICollideable;
-import kgr.cubeshooter.world.entities.IDrawable;
-import kgr.cubeshooter.world.entities.TurningMoment;
-import kgr.cubeshooter.world.entities.Velocity;
+import com.sun.media.jfxmedia.logging.Logger;
+import kgr.cubeshooter.world.entities.boundingBoxes.AlignedCuboid;
 import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
 import org.joml.Vector3f;
+import kgr.cubeshooter.world.entities.Collideable;
+import kgr.engine.IGraphItem;
+import kgr.engine.graph.Material;
+import kgr.engine.graph.Mesh;
+import kgr.engine.graph.ObjImporter;
+import kgr.engine.graph.Texture;
 
 /**
  *
  * @author Benjamin
  */
-public class LevelCuboid implements ICollideable, IDrawable {
+public class LevelCuboid extends Collideable implements IGraphItem {
 	
-	protected Vector3f position;
+	private final AlignedCuboid boundingBox;
+	
+	private static Mesh mesh;
 
-	public LevelCuboid(Vector3f position) {
-		this.position = position;
+	public LevelCuboid(Vector3f position) {		
+		this.boundingBox = new AlignedCuboid(position, 1, 2, 1);
 	}
 
 	@Override
 	public BoundingBox getBoundingBox() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return boundingBox;
 	}
 
 	@Override
 	public boolean hasVeclocity() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return false;
 	}
 
 	@Override
-	public Velocity getMoveVelocity() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public void init() {
+		if (mesh == null) {
+			try {
+				mesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
+				Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
+				Material mat = new Material(texture, 0.3f);
+				mesh.setMaterial(mat);
+			} catch (Exception e) {
+				Logger.logMsg(Logger.ERROR, "Cant't load mesh (/kgr/cubeshooter/data/models/block.obj) or texture (/kgr/cubeshooter/data/textures/blockUV.png)");
+			}
+		}
 	}
 
 	@Override
-	public void setMoveVelocity(Velocity moveVelocity) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public void deinit() {
+		if (mesh != null) {
+			mesh.cleanUp();
+			mesh = null;
+		}
 	}
 
 	@Override
-	public TurningMoment getTurningMoment() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public Vector3f getPosition() {
+		return this.boundingBox.getPosition();
 	}
 
 	@Override
-	public void setTurningMoment(TurningMoment turningMoment) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	public Vector3f getScale() {
+		return new Vector3f(this.boundingBox.getA(), this.boundingBox.getB(), this.boundingBox.getC());
+	}
+
+	@Override
+	public Vector3f getRotation() {
+		return new Vector3f();
+	}
+
+	@Override
+	public Mesh getMesh() {
+		return mesh;
 	}
 	
 }

@@ -1,6 +1,6 @@
 package kgr.engine.graph;
 
-import kgr.engine.GraphItem;
+import kgr.engine.IGraphItem;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -84,7 +84,7 @@ public class Transformation
     * @param viewMatrix
     * @return
     */
-   public Matrix4f getModelViewMatrix(GraphItem gameItem, Matrix4f viewMatrix)
+   public Matrix4f getModelViewMatrix(IGraphItem gameItem, Matrix4f viewMatrix)
    {
       Vector3f rotation = gameItem.getRotation();
       modelViewMatrix.identity().translate(gameItem.getPosition()).

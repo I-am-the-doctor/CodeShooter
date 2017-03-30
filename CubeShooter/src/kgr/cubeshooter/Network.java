@@ -11,12 +11,6 @@ package kgr.cubeshooter;
  */
 public abstract class Network implements Runnable {
 	
-	protected static Network instance;
-	
-	protected Network() {
-		instance = this;
-	}
-	
 	@Override
 	public void run() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -26,7 +20,6 @@ public abstract class Network implements Runnable {
 		
 	}
 
-	public static Network instance() {
-		return instance;
+	public void init() {
 	}
 }

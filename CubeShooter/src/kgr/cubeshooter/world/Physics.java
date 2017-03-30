@@ -5,7 +5,7 @@
  */
 package kgr.cubeshooter.world;
 
-import kgr.cubeshooter.world.entities.ICollideable;
+import kgr.cubeshooter.world.entities.Collideable;
 
 /**
  *
@@ -13,7 +13,7 @@ import kgr.cubeshooter.world.entities.ICollideable;
  */
 public class Physics {
 	
-	public void collide(ICollideable collider_1, ICollideable collider_2) {
+	public void collide(Collideable collider_1, Collideable collider_2) {
 		
 	}
 }

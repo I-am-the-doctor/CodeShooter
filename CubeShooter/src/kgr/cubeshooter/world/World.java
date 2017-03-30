@@ -5,36 +5,43 @@
  */
 package kgr.cubeshooter.world;
 
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.*;
 import kgr.cubeshooter.INetworkable;
 import kgr.cubeshooter.Network;
-import kgr.cubeshooter.world.entities.ICollideable;
-import kgr.cubeshooter.world.entities.IDrawable;
 import kgr.cubeshooter.world.entities.ITickable;
+import kgr.engine.Input;
 import org.w3c.dom.Document;
+import kgr.cubeshooter.world.entities.Collideable;
+import kgr.engine.IGraphItem;
 
 /**
  *
  * @author Benjamin
  */
-public class World implements IDrawable, INetworkable {
+public class World implements INetworkable {
 	
 	protected String file;
 	
 	protected Physics physics;
 	
-	protected List<IDrawable> drawableList;
-	protected List<ICollideable> collideableList;
-	protected List<ITickable> tickableList;
-	protected List<INetworkable> networkableList; 
+	protected Set<IGraphItem> graphItemList;
+	protected Set<Collideable> collideableList;
+	protected Set<ITickable> tickableList;
+	protected Set<INetworkable> networkableList; 
 	
 	public World(Physics physics) {
 		this.physics = physics;
 	}
 	
 	public void load(String file) {
+		this.graphItemList = new HashSet<>();
+		this.collideableList = new HashSet<>();
+		this.tickableList = new HashSet<>();
+		this.networkableList = new HashSet<>();
+		
 		this.file = file;
 		
 		//DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -46,44 +53,42 @@ public class World implements IDrawable, INetworkable {
 	public void unload() {
 		this.file = "";
 		
-		this.drawableList.clear();
+		this.graphItemList.clear();
 		this.collideableList.clear();
 		this.tickableList.clear();
 		this.networkableList.clear();
 	}
 	
 	public void reload() {
-		String file = this.file;
+		String reloadFile = this.file;
 		unload();
-		load(file);
+		load(reloadFile);
 	}
 	
 	String getFile() {
 		return this.file;
 	}
 	
-	@Override
 	public void init() {
-		for (IDrawable drawable :this.drawableList) {
-			drawable.init();
+		for (IGraphItem graphItem :this.graphItemList) {
+			graphItem.init();
 		}
 	}
 	
-	@Override
 	public void deinit() {
-		for (IDrawable drawable :this.drawableList) {
-			drawable.deinit();
+		for (IGraphItem graphItem :this.graphItemList) {
+			graphItem.deinit();
 		}
 	}
 	
-	public void tick(Network network, float milliseconds) {
+	public void tick(Input input, float milliseconds) {
 		for (ITickable tickable :this.tickableList) {
-			tickable.tick(physics, milliseconds);
+			tickable.tick(physics, input, milliseconds);
 		}
 		
-		for (Iterator<ICollideable> it_1 = this.collideableList.iterator(); it_1.hasNext();) {
-			ICollideable collidable = it_1.next();
-			for (Iterator<ICollideable> it_2 = it_1; it_2.hasNext();) {
+		for (Iterator<Collideable> it_1 = this.collideableList.iterator(); it_1.hasNext();) {
+			Collideable collidable = it_1.next();
+			for (Iterator<Collideable> it_2 = it_1; it_2.hasNext();) {
 				this.physics.collide(collidable, it_2.next());
 			}
 		}
@@ -96,18 +101,11 @@ public class World implements IDrawable, INetworkable {
 		}
 	}
 	
-	@Override
-	public void draw() {
-		for (IDrawable drawable :this.drawableList) {
-			drawable.draw();
-		}
+	public void addGraphItem(IGraphItem graphItem) {
+		this.graphItemList.add(graphItem);
 	}
 	
-	public void addDrawable(IDrawable drawable) {
-		this.drawableList.add(drawable);
-	}
-	
-	public void addCollideable(ICollideable collideable) {
+	public void addCollideable(Collideable collideable) {
 		this.collideableList.add(collideable);
 	}
 	
@@ -117,5 +115,9 @@ public class World implements IDrawable, INetworkable {
 	
 	public void addNetworkable(INetworkable networkable) {
 		this.networkableList.add(networkable);
+	}
+	
+	public Set<IGraphItem> getGraphItems() {
+		return this.graphItemList;
 	}
 }

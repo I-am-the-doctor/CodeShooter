@@ -1,5 +1,6 @@
 package kgr.cubeshooter.client;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -15,8 +16,10 @@ import static kgr.cubeshooter.Constants.CAMERA_POS_STEP;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
 import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
 import kgr.cubeshooter.Network;
+import kgr.cubeshooter.world.LevelCuboid;
 import kgr.cubeshooter.world.World;
 import kgr.cubeshooter.world.Physics;
+import kgr.engine.IGraphItem;
 import static org.lwjgl.glfw.GLFW.*;
 
 
@@ -71,13 +74,13 @@ public class CubeShooter implements IGameLogic
 	/**
 	 * The world with all objects
 	 */
-	private World world;
+	private final World world;
 	
 	/**
 	 * Represents the network connection.
 	 * It must be initialized with a ClientNetwork object.
 	 */
-	private Network network;
+	private final Network network;
 	
 
     /**
@@ -103,6 +106,12 @@ public class CubeShooter implements IGameLogic
     {
         graphItems = new HashSet<>();
         renderer.init(window);
+		
+		world.load("world.xml");
+		LevelCuboid testCube = new LevelCuboid(new Vector3f(0, 4, 0));
+		world.addCollideable(testCube);
+		world.addGraphItem(testCube);
+		world.init();
 
         // Load the cube mesh and texture it.
         Mesh blockMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
@@ -178,10 +187,10 @@ public class CubeShooter implements IGameLogic
         else if (input.isKeyPressed(GLFW_KEY_D)) {
             cameraInc.x = 1;
         }
-        if (input.isKeyPressed(GLFW_KEY_Z)) {
+        if (input.isKeyPressed(GLFW_KEY_Z) || input.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
             cameraInc.y = -1;
         }
-        else if (input.isKeyPressed(GLFW_KEY_X)) {
+        else if (input.isKeyPressed(GLFW_KEY_X) || input.isKeyPressed(GLFW_KEY_SPACE)) {
             cameraInc.y = 1;
         }
     }
@@ -194,13 +203,9 @@ public class CubeShooter implements IGameLogic
      * @param input		Input data from the mouse and keyboard.
      */
     @Override
-<<<<<<< HEAD
     public void update(float delta, Input input)
-=======
-    public void update(float delta, Input mouseInput)
->>>>>>> origin/master
     {
-		world.tick(input, lightAngle);
+		world.tick(input, delta);
 		
         // Update camera position.
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
@@ -248,7 +253,9 @@ public class CubeShooter implements IGameLogic
     @Override
     public void render(Window window)
     {
-        renderer.render(window, camera, graphItems, ambientLight, pointLights, directionalLight, world);
+		Collection<IGraphItem> items = new HashSet<>(this.graphItems);
+		items.addAll(world.getGraphItems());
+        renderer.render(window, camera, items, ambientLight, pointLights, directionalLight);
     }
 
 
@@ -258,9 +265,10 @@ public class CubeShooter implements IGameLogic
     @Override
     public void cleanup()
     {
+		world.deinit();
         renderer.cleanup();
         for (GraphItem gameItem : graphItems) {
-            gameItem.getMesh().cleanUp();
+            gameItem.deinit();
         }
     }
 }

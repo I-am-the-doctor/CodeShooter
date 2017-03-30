@@ -2,7 +2,6 @@ package kgr.engine;
 
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 
-
 /**
  * The class which calls the game loop etc.
  *
@@ -24,8 +23,11 @@ public class GameEngine implements Runnable {
 
 	private final Input input;
 
-   private double lastFpsTime;
+	private double lastFpsTime;
+	
+	private int fpsCount;
 
+	private double fpsSum;
 
 	/**
 	 * Creates a new instance of the game engine which runs a new thread for the loop.
@@ -46,7 +48,6 @@ public class GameEngine implements Runnable {
 		timer = new Timer();
 	}
 
-
 	/**
 	 * Starts the game (initializing the game loop, logic etc).
 	 */
@@ -59,7 +60,6 @@ public class GameEngine implements Runnable {
 			gameLoopThread.start();
 		}
 	}
-
 
 	/**
 	 * Fires up everything, first initialization, then the game loop.
@@ -76,29 +76,23 @@ public class GameEngine implements Runnable {
 		}
 	}
 
+	/**
+	 * Initialize everything.
+	 *
+	 * @throws Exception If something bad happens :-)
+	 */
+	protected void init() throws Exception {
+		window.init();
+		timer.init();
+		input.init(window);
+		gameLogic.init(window);
 
-   /**
-    * Initialize everything.
-    *
-    * @throws Exception If something bad happens :-)
-    */
-   protected void init() throws Exception
-   {
-      window.init();
-      timer.init();
-      input.init(window);
-      gameLogic.init(window);
-
-      // Make the window visible after everything is initialized.
-      glfwShowWindow(window.getWindowHandle());
-   }
-
+		// Make the window visible after everything is initialized.
+		glfwShowWindow(window.getWindowHandle());
+	}
 
 	/**
-    * This is the main game loop:
-    * Handle input,
-    * process logic,
-    * render.
+	 * This is the main game loop: Handle input, process logic, render.
 	 */
 	protected void gameLoop() {
 		float elapsedTime;
@@ -107,10 +101,15 @@ public class GameEngine implements Runnable {
 		while (running & !window.windowShouldClose()) {
 			elapsedTime = timer.getElapsedTime();
 
-          if (timer.getTime() - lastFpsTime > 1) {
-              System.out.println("FPS: " + 1/elapsedTime);
-              lastFpsTime = timer.getTime();
-          }
+			
+			fpsSum += 1 / elapsedTime;
+			fpsCount += 1;
+			if (timer.getTime() - lastFpsTime > 1) {
+				System.out.println("FPS: " + fpsSum / fpsCount);
+				lastFpsTime = timer.getTime();
+				fpsSum = 0;
+				fpsCount = 0;
+			}
 
 			input();
 
@@ -125,14 +124,12 @@ public class GameEngine implements Runnable {
 		}
 	}
 
-
 	/**
 	 * Invoke cleanup methods.
 	 */
 	protected void cleanup() {
 		gameLogic.cleanup();
 	}
-
 
 	/**
 	 * Sleep until we can continue to the next frame.
@@ -156,7 +153,6 @@ public class GameEngine implements Runnable {
 		gameLogic.input(window, input);
 	}
 
-
 	/**
 	 * Invoke update methods.
 	 *
@@ -165,7 +161,6 @@ public class GameEngine implements Runnable {
 	protected void update(float delta) {
 		gameLogic.update(delta, input);
 	}
-
 
 	/**
 	 * Invoke render methods.
