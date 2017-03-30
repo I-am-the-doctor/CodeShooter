@@ -121,21 +121,21 @@ public class CubeShooter implements IGameLogic
 
       // Set up the ambient light and a few point lights.
       ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
-      Vector3f lightColour = new Vector3f(0.7, 0.5, 0.5);
+      Vector3f lightColour = new Vector3f(0.7f, 0.5f, 0.5f);
       Vector3f lightPosition = new Vector3f(2, 6, 2);
       pointLights = new PointLight[MAX_POINT_LIGHTS];
       for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
          pointLights[i] = new PointLight(lightColour, lightPosition, 10f);
          PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 1f);
          pointLights[i].setAttenuation(att);
-         lightPosition = new Vector3f(2*i, 6, 2*i);
-         lightColour   = new Vector3f(0.7+i/100, 0.5, 0.5);
+         lightPosition = new Vector3f(4f*i, 6, 4f*i);
+         lightColour   = new Vector3f((float) (0.7+i/10), 0.5f, 0.5f);
       }
 
       // Initialize the directional (sun) light.
       lightPosition = new Vector3f(50, 50, 100);
       lightColour = new Vector3f(0.5f, 0.4f, 0.4f);
-      directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);   
+      directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);
    }
 
 
