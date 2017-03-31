@@ -1,10 +1,5 @@
 package kgr.cubeshooter.client;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-import kgr.engine.GraphItem;
 import kgr.engine.IGameLogic;
 import kgr.engine.Input;
 import kgr.engine.Window;
@@ -16,10 +11,9 @@ import static kgr.cubeshooter.Constants.CAMERA_POS_STEP;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
 import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
 import kgr.cubeshooter.Network;
-import kgr.cubeshooter.world.LevelCuboid;
 import kgr.cubeshooter.world.World;
 import kgr.cubeshooter.world.Physics;
-import kgr.engine.IGraphItem;
+import kgr.cubeshooter.world.entities.RotatingEntity;
 import static org.lwjgl.glfw.GLFW.*;
 
 
@@ -61,15 +55,6 @@ public class CubeShooter implements IGameLogic
     private DirectionalLight directionalLight;
     private float lightAngle;
 
-    /**
-     * Temporary mesh to show some action.
-     */
-    private GraphItem suzanne;
-
-    /**
-     * Temporary list of all objects to render.
-     */
-    private Set<GraphItem> graphItems;
 	
 	/**
 	 * The world with all objects
@@ -104,47 +89,21 @@ public class CubeShooter implements IGameLogic
     @Override
     public void init(Window window) throws Exception
     {
-        graphItems = new HashSet<>();
         renderer.init(window);
 		
-		world.load("world.xml");
-		LevelCuboid testCube = new LevelCuboid(new Vector3f(0, 4, 0));
-		world.addCollideable(testCube);
-		world.addGraphItem(testCube);
-		world.init();
-
-        // Load the cube mesh and texture it.
-        Mesh blockMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/block.obj");
-        Texture texture = new Texture("/kgr/cubeshooter/data/textures/blockUV.png");
-        Material mat = new Material(texture, 0.3f);
-        blockMesh.setMaterial(mat);
+		world.load("/kgr/cubeshooter/data/world.xml");
 
         // Load the suzanne model.
         Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
-        texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
-        mat = new Material(texture, 5f);
+        Texture texture = new Texture("/kgr/cubeshooter/data/textures/suzanneUV.png");
+        Material mat = new Material(texture, 5f);
         suzanneMesh.setMaterial(mat);
 
-        suzanne = new GraphItem(suzanneMesh);
+        RotatingEntity suzanne = new RotatingEntity(suzanneMesh);
         suzanne.setPosition(5, 10, 5);
         suzanne.setRotation(0, 150, 0);
-        graphItems.add(suzanne);
-
-        // Create a simple cube floor (for test purposes).
-        Random rand = new Random();
-        for (float x = 0; x < 50; x++) {
-            for (float z = 0; z < 50; z++) {
-                GraphItem graphItem = new GraphItem(blockMesh);
-                graphItem.setPosition(2 * x, 0, 2 * z);
-                graphItems.add(graphItem);
-                // Randomly place cubes on the second "level".
-                if (rand.nextInt(2) > 0) {
-                    graphItem = new GraphItem(blockMesh);
-                    graphItem.setPosition(2 * x, 2, 2 * z);
-                    graphItems.add(graphItem);
-                }
-            }
-        }
+        world.addGraphItem(suzanne);
+        world.addTickable(suzanne);
 
         // Set up the ambient light and a few point lights.
         ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
@@ -162,6 +121,9 @@ public class CubeShooter implements IGameLogic
         // Initialize the directional (sun) light.
         lightColour = new Vector3f(0.5f, 0.4f, 0.4f);
         directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);
+		
+		// Initialize IGraphItems of the world
+		world.init();
     }
 
 
@@ -216,9 +178,6 @@ public class CubeShooter implements IGameLogic
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
         }
 
-        // Rotate Suzanne a bit. :-)
-        suzanne.setRotation(suzanne.getRotation().x, suzanne.getRotation().y + 1, suzanne.getRotation().z);
-
         // Update directional lightVisible direction, intensity and colour like a day/night cycle.
         lightAngle += 1.1f;
         if (lightAngle > 90) {
@@ -253,9 +212,7 @@ public class CubeShooter implements IGameLogic
     @Override
     public void render(Window window)
     {
-		Collection<IGraphItem> items = new HashSet<>(this.graphItems);
-		items.addAll(world.getGraphItems());
-        renderer.render(window, camera, items, ambientLight, pointLights, directionalLight);
+        renderer.render(window, camera, world.getGraphItems(), ambientLight, pointLights, directionalLight);
     }
 
 
@@ -267,8 +224,5 @@ public class CubeShooter implements IGameLogic
     {
 		world.deinit();
         renderer.cleanup();
-        for (GraphItem gameItem : graphItems) {
-            gameItem.deinit();
-        }
     }
 }

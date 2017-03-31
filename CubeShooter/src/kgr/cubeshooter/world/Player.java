@@ -13,21 +13,21 @@ import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
 import kgr.engine.Input;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import kgr.cubeshooter.world.entities.Collideable;
 import kgr.engine.IGraphItem;
 import kgr.engine.graph.Mesh;
+import kgr.cubeshooter.world.entities.ICollideable;
 
 /**
  *
  * @author Benjamin
  */
-public class Player extends Collideable implements ITickable, IGraphItem {
+public class Player  implements ICollideable, ITickable, IGraphItem {
 	
-	private Velocity moveVelocity;
+	private final Velocity moveVelocity;
 	
-	private Vector3f position;
+	private final Vector3f position;
 	
-	private Orientation orientation;
+	private final Orientation orientation;
 	
 	private static final float MOVE_SPEED = 1;
 	
@@ -44,26 +44,6 @@ public class Player extends Collideable implements ITickable, IGraphItem {
 
 	@Override
 	public boolean hasVeclocity() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public Velocity getMoveVelocity() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public void setMoveVelocity(Velocity moveVelocity) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public TurningMoment getTurningMoment() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public void setTurningMoment(TurningMoment turningMoment) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 

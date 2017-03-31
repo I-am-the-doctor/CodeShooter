@@ -5,15 +5,17 @@
  */
 package kgr.cubeshooter.world;
 
-import kgr.cubeshooter.world.entities.ICollideable;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author Benjamin
  */
-public class Physics {
+public interface IXmlSerializeable {
 	
-	public void collide(ICollideable collider_1, ICollideable collider_2) {
-		
-	}
+	public DefaultHandler getXmlHandler();
+	
+	public void writeXml(ContentHandler handler) throws SAXException;
 }

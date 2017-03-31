@@ -29,7 +29,6 @@ public abstract class BoundingBox {
 	
 	/**
 	 * The smallest sphere around the real bounding box.
-	 * @return The maximal radius of the bounding box.
 	 */
 	protected float radiusSquared;
 	
