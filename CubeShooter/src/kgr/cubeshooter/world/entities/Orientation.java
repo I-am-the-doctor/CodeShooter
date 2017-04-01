@@ -12,7 +12,7 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public final class Orientation {
-	
+
 	/**
 	 * The rotationVector described as the normal or front vector of the entity.
 	 * For example:
@@ -21,44 +21,44 @@ public final class Orientation {
 	 * -cylinder: cylinder axis (axis between the the two ground planes)
 	 */
 	private Vector3f rotationVector;
-	
+
 	/**
 	 * The rotation around the rotation-vector.
 	 */
 	private float rotationAngle;
-	
+
 	public Orientation() {
-		this.rotationVector = new Vector3f(0, 1, 0);
-		this.rotationAngle = 0;
+		rotationVector = new Vector3f(0, 1, 0);
+		rotationAngle = 0;
 	}
-	
+
 	public Orientation(Vector3f rotationVector, float rotationAngle) {
 		this.rotationVector = rotationVector;
 		this.rotationAngle = rotationAngle;
 	}
-	
+
 	public Vector3f getRotationVector() {
-		return this.rotationVector;
+		return rotationVector;
 	}
-	
+
 	public void setRotationVector(Vector3f rotationVector) {
 		this.rotationVector = rotationVector;
 	}
-	
+
 	public float getRotationAngle() {
-		return this.rotationAngle;
+		return rotationAngle;
 	}
 
 	public void setRotationAngle(float rotationAngle) {
 		this.rotationAngle = rotationAngle;
 	}
-	
+
 	public void rotateVector(Vector3f rotationVector) {
 		this.rotationVector.add(rotationVector);
 	}
-	
+
 	public void rotateAngle(float angle) {
-		this.rotationAngle += angle;
+		rotationAngle += angle;
 	}
 
 	public void rotate(Vector3f rotationVector, float rotationAngle) {

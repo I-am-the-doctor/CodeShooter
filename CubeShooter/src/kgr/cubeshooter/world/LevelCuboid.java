@@ -33,11 +33,11 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
     private static Mesh mesh;
 
     public LevelCuboid(Vector3f position) {
-        this.boundingBox = new AlignedCuboid(position, 1, 1, 1);
+        boundingBox = new AlignedCuboid(position, 1, 1, 1);
     }
 
     public LevelCuboid() {
-        this.boundingBox = new AlignedCuboid(new Vector3f(), 1, 1, 1);
+        boundingBox = new AlignedCuboid(new Vector3f(), 1, 1, 1);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
                 Material mat = new Material(texture, 0.3f);
                 mesh.setMaterial(mat);
             } catch (Exception ex) {
-                System.err.println("Cant't load mesh (" + meshPath + ") or texture (" + texPath + ")");
+                System.err.println("Cant't load mesh (" + meshPath + ") or texture (" + texPath + ")!");
             }
         }
     }
@@ -76,12 +76,12 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
 
     @Override
     public Vector3f getPosition() {
-        return this.boundingBox.getPosition();
+        return boundingBox.getPosition();
     }
 
     @Override
     public Vector3f getScale() {
-        return new Vector3f(this.boundingBox.getA(), this.boundingBox.getB(), this.boundingBox.getC());
+        return new Vector3f(boundingBox.getA(), boundingBox.getB(), boundingBox.getC());
     }
 
     @Override
@@ -111,9 +111,9 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
     @Override
     public void writeXml(ContentHandler handler) throws SAXException {
         AttributesImpl attributes = new AttributesImpl();
-        attributes.addAttribute("", "", "x", "", Float.toString(this.boundingBox.getPosition().x));
-        attributes.addAttribute("", "", "y", "", Float.toString(this.boundingBox.getPosition().y));
-        attributes.addAttribute("", "", "z", "", Float.toString(this.boundingBox.getPosition().z));
+        attributes.addAttribute("", "", "x", "", Float.toString(boundingBox.getPosition().x));
+        attributes.addAttribute("", "", "y", "", Float.toString(boundingBox.getPosition().y));
+        attributes.addAttribute("", "", "z", "", Float.toString(boundingBox.getPosition().z));
         handler.startElement("", "", "Position", attributes);
         handler.endElement("", "", "Position");
     }

@@ -12,13 +12,13 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public class AlignedCylinder extends BoundingBox {
-	
+
 	private float radius;
 	private float height;
-	
+
 	public AlignedCylinder(Vector3f position, float radius, float height) {
 		super(position, new Vector3f(radius, radius, height).lengthSquared());
-		
+
 		this.radius = radius;
 		this.height = height;
 	}
@@ -31,32 +31,32 @@ public class AlignedCylinder extends BoundingBox {
 	@Override
 	public float getSquaredDistanceToSurface(Vector3f direction) {
 		float slopeSquared = (direction.z * direction.z) / (direction.x * direction.x * direction.y * direction.y);
-		float realRadiusSquared = this.radius * this.radius;
-		float heihtSquared = this.height * this.height;
-		
+		float realRadiusSquared = radius * radius;
+		float heihtSquared = height * height;
+
 		if (slopeSquared <= realRadiusSquared / heihtSquared) {
 			return realRadiusSquared + realRadiusSquared * slopeSquared;
 		} else {
 			return heihtSquared + heihtSquared / slopeSquared;
 		}
 	}
-	
+
 	public float getRadius() {
-		return this.radius;
+		return radius;
 	}
-	
+
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
-	
+
 	public float getHeight() {
-		return this.height;
+		return height;
 	}
-	
+
 	public void setHeight(float height) {
-		this.height = height;
+		height = height;
 	}
-	
+
 	public void setDimension(float radius, float height) {
 		this.radius = radius;
 		this.height = height;

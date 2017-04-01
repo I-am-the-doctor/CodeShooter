@@ -13,45 +13,45 @@ import org.joml.Vector3f;
  */
 public final class Velocity {
 	private Vector3f direction;
-	
+
 	private float speed;
-	
+
 	public Velocity(Vector3f direction, float speed) {
 		this.direction = direction;
 		this.speed = speed;
 	}
-	
+
 	public Velocity(Vector3f velocity) {
 		this.direction = velocity;
 		this.speed = velocity.length();
 	}
-	
+
 	public Vector3f getDirection() {
-		return this.direction;
+		return direction;
 	}
-	
+
 	public float getSpeed() {
-		if (this.speed != 0) {
-			return this.speed;
+		if (speed != 0) {
+			return speed;
 		} else {
-			this.speed = this.direction.length();
-			return this.speed;
+			speed = direction.length();
+			return speed;
 		}
 	}
-	
+
 	public void setDirection(Vector3f direction) {
 		this.direction = direction;
 	}
-	
+
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
-	
+
 	public void setVelocity(Vector3f direction, float speed) {
 		this.direction = direction;
 		this.speed = speed;
 	}
-	
+
 	public void setVelocity(Vector3f velocity) {
 		this.direction = velocity;
 		this.speed = velocity.length();

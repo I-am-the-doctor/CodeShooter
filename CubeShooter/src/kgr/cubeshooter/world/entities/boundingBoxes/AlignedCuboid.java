@@ -12,13 +12,13 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public class AlignedCuboid extends BoundingBox {
-	
+
 	protected float a;
 	protected float b;
 	protected float c;
-	
+
 	/**
-	 * 
+	 *
 	 * @param position
 	 * @param a The length of the cuboid.
 	 * @param b The width of the cuboid.
@@ -26,7 +26,7 @@ public class AlignedCuboid extends BoundingBox {
 	 */
 	public AlignedCuboid(Vector3f position, float a, float b, float c) {
 		super(position, new Vector3f(a, b, c).lengthSquared());
-		
+
 		this.a = a;
 		this.b = b;
 		this.c = c;
@@ -52,36 +52,36 @@ public class AlignedCuboid extends BoundingBox {
 			d.y *= -1;
 		if (d.z < 0)
 			d.z *= -1;
-		
+
 		// At which face is the intercection?
 		if (d.x > d.y && d.x > d.z) {
 			// r * direction = 0.5 * vectorA + s * vectorB + t * vectorC
-			return d.mul(this.a / (2 * d.x)).lengthSquared();
+			return d.mul(a / (2 * d.x)).lengthSquared();
 		} if (d.y > d.x && d.y > d.z) {
 			// r * direction = s * vectorA + 0.5 * vectorB + t * vectorC
-			return d.mul(this.b / (2 * d.x)).lengthSquared();
+			return d.mul(b / (2 * d.x)).lengthSquared();
 		} else {
 			// r * direction = s * vectorA + t * vectorB + 0.5 * vectorC
-			return d.mul(this.c / (2 * d.x)).lengthSquared();
-		}		
+			return d.mul(c / (2 * d.x)).lengthSquared();
+		}
 	}
-	
+
 	public float getA() {
-		return this.a;
+		return a;
 	}
-	
+
 	public float getB() {
-		return this.b;
+		return b;
 	}
-	
+
 	public float getC() {
-		return this.c;
+		return c;
 	}
-	
+
 	public void setA(float a) {
 		this.a = a;
 	}
-	
+
 	public void setB(float b) {
 		this.b = b;
 	}
@@ -89,7 +89,7 @@ public class AlignedCuboid extends BoundingBox {
 	public void setC(float c) {
 		this.c = c;
 	}
-	
+
 	public void setSize(float a, float b, float c) {
 		this.a = a;
 		this.radiusSquared = new Vector3f(a, b, c).lengthSquared();

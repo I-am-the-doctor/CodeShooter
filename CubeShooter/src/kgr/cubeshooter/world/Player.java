@@ -5,32 +5,31 @@
  */
 package kgr.cubeshooter.world;
 
+import kgr.cubeshooter.world.entities.ICollideable;
 import kgr.cubeshooter.world.entities.ITickable;
 import kgr.cubeshooter.world.entities.Orientation;
-import kgr.cubeshooter.world.entities.TurningMoment;
 import kgr.cubeshooter.world.entities.Velocity;
 import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
+import kgr.engine.IGraphItem;
 import kgr.engine.Input;
+import kgr.engine.graph.Mesh;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import kgr.engine.IGraphItem;
-import kgr.engine.graph.Mesh;
-import kgr.cubeshooter.world.entities.ICollideable;
 
 /**
  *
  * @author Benjamin
  */
 public class Player  implements ICollideable, ITickable, IGraphItem {
-	
+
 	private final Velocity moveVelocity;
-	
+
 	private final Vector3f position;
-	
+
 	private final Orientation orientation;
-	
+
 	private static final float MOVE_SPEED = 1;
-	
+
 	public Player(Vector3f position, Orientation orientation) {
 		this.position = position;
 		this.orientation = orientation;
@@ -51,13 +50,13 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	public void tick(Physics physics, Input input, float milliseconds) {
 		float moveSpeed = 0;
 		Vector3f moveDirection = new Vector3f();
-		
+
 		if (input.isKeyPressed(GLFW.GLFW_KEY_W)) {
 			moveSpeed = MOVE_SPEED;
 			moveDirection.z += 1;
 		}
 
-		this.moveVelocity.setVelocity(moveDirection, moveSpeed);
+		moveVelocity.setVelocity(moveDirection, moveSpeed);
 	}
 
 	@Override
@@ -89,5 +88,5 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	public Mesh getMesh() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
+
 }
