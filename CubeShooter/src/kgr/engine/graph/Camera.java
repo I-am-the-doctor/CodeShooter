@@ -10,15 +10,23 @@ import org.joml.Vector3f;
  */
 public class Camera {
 
-    private final Vector3f position;
+    final Vector3f position;
+    final Vector3f rotation;
 
-    private final Vector3f rotation;
 
+    /**
+     * Default constructor with 0 position and rotation.
+     */
     public Camera() {
         position = new Vector3f(0, 0, 0);
         rotation = new Vector3f(0, 0, 0);
     }
 
+
+    /**
+     * @param position
+     * @param rotation
+     */
     public Camera(Vector3f position, Vector3f rotation) {
         this.position = position;
         this.rotation = rotation;

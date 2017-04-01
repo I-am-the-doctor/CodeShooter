@@ -14,6 +14,12 @@ import org.joml.Vector3f;
  */
 public class ObjImporter
 {
+   /**
+    * Imports a Wavefront ".obj" file to a Mesh.
+    * @param filename
+    * @return The importet mesh.
+    * @throws Exception
+    */
    public static Mesh loadMesh(String filename) throws Exception
    {
       List<String> lines = Utils.readAllLines(filename);
@@ -72,7 +78,7 @@ public class ObjImporter
     * @param textCoordList
     * @param normList
     * @param facesList
-    * @return The Mesh with reordered lists.
+    * @return The Mesh with reordered data lists.
     */
    private static Mesh reorderLists(List<Vector3f> posList, List<Vector2f> textCoordList,
                                     List<Vector3f> normList, List<Face> facesList)

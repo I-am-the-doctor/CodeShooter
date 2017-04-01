@@ -13,6 +13,15 @@ public class OrbitingCamera extends Camera
     private float    radius;
     private Vector3f center;
 
+    /**
+     * The angle between the XZ-plane and the camera.
+     */
+    private float pitch;
+    /**
+     * The rotation of the camera around the y-axis.
+     */
+    private float heading;
+
 
     /**
      * @param radius The radius at which to orbit around the center point.
@@ -58,5 +67,33 @@ public class OrbitingCamera extends Camera
     public Vector3f getCenterPoint()
     {
         return center;
+    }
+
+
+    /**
+     * @return
+     */
+    public float getPitch() {
+        return pitch;
+    }
+
+
+    /**
+     * @param pitch
+     */
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+
+    /**
+     * @param dX
+     * @param dY
+     * @param dZ
+     */
+    @Override
+    public void movePosition(float dX, float dY, float dZ)
+    {
+
     }
 }
