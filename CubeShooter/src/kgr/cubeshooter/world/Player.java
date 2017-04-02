@@ -5,21 +5,20 @@
  */
 package kgr.cubeshooter.world;
 
-import com.sun.media.jfxmedia.logging.Logger;
+import kgr.cubeshooter.world.entities.ICollideable;
 import kgr.cubeshooter.world.entities.ITickable;
 import kgr.cubeshooter.world.entities.Orientation;
 import kgr.cubeshooter.world.entities.TurningMoment;
 import kgr.cubeshooter.world.entities.Velocity;
-import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
-import kgr.engine.Input;
-import org.joml.Vector3f;
-import kgr.engine.IGraphItem;
-import kgr.engine.graph.Mesh;
-import kgr.cubeshooter.world.entities.ICollideable;
 import kgr.cubeshooter.world.entities.boundingBoxes.AlignedCylinder;
+import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
+import kgr.engine.IGraphItem;
+import kgr.engine.Input;
 import kgr.engine.graph.Material;
+import kgr.engine.graph.Mesh;
 import kgr.engine.graph.ObjImporter;
 import kgr.engine.graph.Texture;
+import org.joml.Vector3f;
 
 /**
  *
@@ -90,7 +89,7 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 				Material mat = new Material(texture, 0.3f);
 				mesh.setMaterial(mat);
 			} catch (Exception e) {
-				Logger.logMsg(Logger.ERROR, "Cant't load mesh (/kgr/cubeshooter/data/models/player.obj) or texture (/kgr/cubeshooter/data/textures/playerUV.png)");
+				System.err.println("Cant't load mesh (/kgr/cubeshooter/data/models/player.obj) or texture (/kgr/cubeshooter/data/textures/playerUV.png)");
 			}
 			
 			instances = 0;
@@ -132,5 +131,5 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	public Mesh getMesh() {
 		return mesh;
 	}
-	
+
 }

@@ -35,6 +35,16 @@ public class ClientPlayer extends Player {
 			throw new UnsupportedOperationException("Cannot instanciate two different ClientPlayer's");
 		}
 	}
+    
+	public ClientPlayer() {
+		super(new Vector3f(), 0);
+		
+		if (instance == null) {
+			instance = this;
+		} else {
+			throw new UnsupportedOperationException("Cannot instanciate two different ClientPlayer's");
+		}
+	}
 	
 	@Override
 	public void tick(Physics physics, Input input, float milliseconds) {

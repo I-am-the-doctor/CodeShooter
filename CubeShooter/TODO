@@ -2,20 +2,16 @@ TODO list for CubeShooter
 =========================
 
 General:
- - integrate the render engine into the game code
- - restructure the main loop for better performance
-
+ - should we create some kind of "ResourceManager"? Otherwise each entity loads it's stuff on itself, which is inefficient
 
 Game:
  - basic networking
  - finish collision detection
- - saving/loading of maps
- - implement some kind of "orbiting camera"
  - …
  - 3D-A* pathfinding for the AI?
 
 
 Engine:
  - parsing of OBJ material (".mtl") files
- - finish phong shading (specular and "glow" texture maps)
+ - finish specular and "glow" texture mapping support
  - …

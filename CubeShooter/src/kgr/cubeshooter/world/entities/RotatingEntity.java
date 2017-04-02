@@ -23,7 +23,7 @@ public class RotatingEntity extends GraphItem implements ITickable {
 
 	@Override
 	public void tick(Physics physics, Input input, float milliseconds) {
-		this.setRotation(this.getRotation().add(0, 1, 0));
+		setRotation(getRotation().add(0, 1, 0));
 	}
-	
+
 }

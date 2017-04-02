@@ -12,11 +12,11 @@ import org.joml.Vector3f;
  * @author Benjamin
  */
 public final class Sphere extends BoundingBox {
-	
+
 	public Sphere(Vector3f position, float radius) {
 		super(position, radius);
 	}
-	
+
 	@Override
 	public Type getType() {
 		return Type.SPHERE;
@@ -24,11 +24,11 @@ public final class Sphere extends BoundingBox {
 
 	@Override
 	public float getSquaredDistanceToSurface(Vector3f direction) {
-		return this.radiusSquared;
+		return radiusSquared;
 	}
-	
+
 	public void setRadius(float radius) {
-		this.radiusSquared = radius * radius;
+		radiusSquared = radius * radius;
 	}
 
 	@Override
