@@ -7,9 +7,7 @@ import kgr.engine.graph.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static kgr.cubeshooter.Constants.CAMERA_POS_STEP;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
-import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
 import kgr.cubeshooter.Network;
 import kgr.cubeshooter.world.World;
 import kgr.cubeshooter.world.Physics;
@@ -25,11 +23,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class CubeShooter implements IGameLogic
 {
     /**
-     * Camera movement vector.
-     */
-    private final Vector3f cameraInc;
-
-    /**
      * The renderer instance.
      */
     private final Renderer renderer;
@@ -37,7 +30,7 @@ public class CubeShooter implements IGameLogic
     /**
      * The camera instance.
      */
-    private final Camera camera;
+    private Camera camera;
 
     /**
      * The color of the ambient light.
@@ -67,6 +60,8 @@ public class CubeShooter implements IGameLogic
 	 */
 	private final Network network;
 	
+	private ClientPlayer player;
+	
 
     /**
      * Creates a new instance.
@@ -74,8 +69,6 @@ public class CubeShooter implements IGameLogic
     public CubeShooter()
     {
         renderer = new Renderer();
-        camera = new Camera(new Vector3f(-5, 10, -5), new Vector3f(20, 135, 0));
-        cameraInc = new Vector3f(0, 0, 0);
 		network = new ClientNetwork();
 		world = new World(new Physics());
     }
@@ -92,6 +85,11 @@ public class CubeShooter implements IGameLogic
         renderer.init(window);
 		
 		world.load("/kgr/cubeshooter/data/world.xml");
+		this.player = new ClientPlayer(new Vector3f(0, 1, 0), 135);
+		world.addEntity(player);
+		
+		camera = new OrbitingCamera(player, 0, 5);
+		world.addEntity(camera);
 
         // Load the suzanne model.
         Mesh suzanneMesh = ObjImporter.loadMesh("/kgr/cubeshooter/data/models/suzanne.obj");
@@ -102,8 +100,7 @@ public class CubeShooter implements IGameLogic
         RotatingEntity suzanne = new RotatingEntity(suzanneMesh);
         suzanne.setPosition(5, 10, 5);
         suzanne.setRotation(0, 150, 0);
-        world.addGraphItem(suzanne);
-        world.addTickable(suzanne);
+        world.addEntity(suzanne);
 
         // Set up the ambient light and a few point lights.
         ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
@@ -136,25 +133,6 @@ public class CubeShooter implements IGameLogic
     @Override
     public void input(Window window, Input input)
     {
-        cameraInc.set(0, 0, 0);
-        if (input.isKeyPressed(GLFW_KEY_W)) {
-            cameraInc.z = -1;
-        }
-        else if (input.isKeyPressed(GLFW_KEY_S)) {
-            cameraInc.z = 1;
-        }
-        if (input.isKeyPressed(GLFW_KEY_A)) {
-            cameraInc.x = -1;
-        }
-        else if (input.isKeyPressed(GLFW_KEY_D)) {
-            cameraInc.x = 1;
-        }
-        if (input.isKeyPressed(GLFW_KEY_Z) || input.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-            cameraInc.y = -1;
-        }
-        else if (input.isKeyPressed(GLFW_KEY_X) || input.isKeyPressed(GLFW_KEY_SPACE)) {
-            cameraInc.y = 1;
-        }
     }
 
 
@@ -168,15 +146,6 @@ public class CubeShooter implements IGameLogic
     public void update(float delta, Input input)
     {
 		world.tick(input, delta);
-		
-        // Update camera position.
-        camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
-
-        // Update camera based on mouse.
-        if (input.isRightButtonPressed()) {
-            Vector2f rotVec = input.getDisplVec();
-            camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-        }
 
         // Update directional lightVisible direction, intensity and colour like a day/night cycle.
         lightAngle += 1.1f;

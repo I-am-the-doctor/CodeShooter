@@ -2,12 +2,15 @@ package kgr.engine;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;
+import org.joml.Vector4d;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 /**
  * Helper class for convenient access onto mouse events.
@@ -21,6 +24,10 @@ public class Input {
     private final Vector2d currentPos;
 
     private final Vector2f displVec;
+	
+	private final Vector2f scrollVec;
+	
+	private final Vector2f currentScrollVec;
 
     private long windowHandle;
 
@@ -38,10 +45,14 @@ public class Input {
 
     private GLFWKeyCallback keyCallback;
 
+    private GLFWScrollCallback scrollCallback;
+
     public Input() {
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
+		scrollVec = new Vector2f();
+		currentScrollVec = new Vector2f();
     }
 
     /**
@@ -83,6 +94,14 @@ public class Input {
                 }
             }
         });
+		
+        glfwSetScrollCallback(windowHandle, new GLFWScrollCallback() {
+			@Override
+			public void invoke(long window, double xOffset, double yOffset) {
+                currentScrollVec.x += (float) xOffset;
+                currentScrollVec.y += (float) yOffset;
+			}
+        });
     }
 
     public Vector2f getDisplVec() {
@@ -108,6 +127,10 @@ public class Input {
         }
         previousPos.x = currentPos.x;
         previousPos.y = currentPos.y;
+		
+		scrollVec.x = currentScrollVec.x;
+		scrollVec.y = currentScrollVec.y;
+		currentScrollVec.set(0, 0);
     }
 
 
@@ -134,4 +157,8 @@ public class Input {
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
+	
+	public Vector2f getScrollVec() {
+		return scrollVec;
+	}
 }

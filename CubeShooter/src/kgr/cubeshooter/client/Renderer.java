@@ -1,7 +1,6 @@
 package kgr.cubeshooter.client;
 
 import java.util.Collection;
-import kgr.engine.GraphItem;
 import kgr.engine.Utils;
 import kgr.engine.Window;
 import kgr.engine.graph.*;
@@ -10,7 +9,6 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
-import kgr.cubeshooter.world.World;
 import kgr.engine.IGraphItem;
 import static org.lwjgl.opengl.GL11.*;
 

@@ -41,6 +41,8 @@ public abstract class BoundingBox {
 	
 	public abstract float getSquaredDistanceToSurface(Vector3f direction);
 	
+	public abstract Vector3f getNormalToSurface(Vector3f direction);
+	
 	public Vector3f getPosition() {
 		return this.position;
 	}

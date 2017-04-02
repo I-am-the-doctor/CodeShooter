@@ -30,6 +30,8 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
 	private final AlignedCuboid boundingBox;
 	
 	private static Mesh mesh;
+	
+	private static int instances;
 
 	public LevelCuboid(Vector3f position) {		
 		this.boundingBox = new AlignedCuboid(position, 1, 1, 1);
@@ -60,15 +62,21 @@ public class LevelCuboid implements ICollideable, IGraphItem, IXmlSerializeable 
 			} catch (Exception e) {
 				Logger.logMsg(Logger.ERROR, "Cant't load mesh (/kgr/cubeshooter/data/models/block.obj) or texture (/kgr/cubeshooter/data/textures/blockUV.png)");
 			}
+			
+			instances = 0;
 		}
+		
+		instances++;
 	}
 
 	@Override
 	public void deinit() {
-		if (mesh != null) {
+		if (instances == 1) {
 			mesh.cleanUp();
 			mesh = null;
 		}
+		
+		instances--;
 	}
 
 	@Override

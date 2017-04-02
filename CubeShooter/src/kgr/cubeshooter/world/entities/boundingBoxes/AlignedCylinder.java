@@ -40,6 +40,21 @@ public class AlignedCylinder extends BoundingBox {
 			return heihtSquared + heihtSquared / slopeSquared;
 		}
 	}
+
+	@Override
+	public Vector3f getNormalToSurface(Vector3f direction) {
+		float slopeSquared = (direction.z * direction.z) / (direction.x * direction.x * direction.y * direction.y);
+		float realRadiusSquared = this.radius * this.radius;
+		float heihtSquared = this.height * this.height;
+		
+		if (slopeSquared <= realRadiusSquared / heihtSquared) {
+			Vector3f normal = new Vector3f(direction);
+			normal.y = 0;
+			return normal;
+		} else {
+			return new Vector3f(0, 1, 0);
+		}
+	}
 	
 	public float getRadius() {
 		return this.radius;

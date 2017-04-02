@@ -1,5 +1,10 @@
 package kgr.engine.graph;
 
+import static kgr.cubeshooter.Constants.MOUSE_SENSITIVITY;
+import kgr.cubeshooter.world.Physics;
+import kgr.cubeshooter.world.Player;
+import kgr.cubeshooter.world.entities.ITickable;
+import kgr.engine.Input;
 import org.joml.Vector3f;
 
 
@@ -8,65 +13,31 @@ import org.joml.Vector3f;
  *
  * @author Val
  */
-public class Camera {
+public class Camera implements ITickable {
+	
+	protected final Player player;
+	
+	protected float xRotation;
 
-    private final Vector3f position;
-
-    private final Vector3f rotation;
-
-    public Camera() {
-        position = new Vector3f(0, 0, 0);
-        rotation = new Vector3f(0, 0, 0);
+    public Camera(Player player, float xRotation) {
+		this.player = player;
+		this.xRotation = xRotation;
     }
 
-    public Camera(Vector3f position, Vector3f rotation) {
-        this.position = position;
-        this.rotation = rotation;
-    }
+	@Override
+	public void tick(Physics physics, Input input, float milliseconds) {
+        if (input.isRightButtonPressed()) {
+			xRotation += input.getDisplVec().x * MOUSE_SENSITIVITY;
+        }
+	}
 
     public Vector3f getPosition() {
-        return position;
-    }
-
-    public void setPosition(float x, float y, float z) {
-        position.x = x;
-        position.y = y;
-        position.z = z;
-    }
-
-
-    /**
-     * Moves the camera in the view direction.
-     *
-     * @param offsetX
-     * @param offsetY
-     * @param offsetZ
-     */
-    public void movePosition(float offsetX, float offsetY, float offsetZ) {
-        if ( offsetZ != 0 ) {
-            position.x += (float) Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
-            position.z += (float) Math.cos(Math.toRadians(rotation.y)) * offsetZ;
-        }
-        if ( offsetX != 0) {
-            position.x += (float) Math.sin(Math.toRadians(rotation.y - 90)) * -1.0f * offsetX;
-            position.z += (float) Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
-        }
-        position.y += offsetY;
+		return player.getPosition();
     }
 
     public Vector3f getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float x, float y, float z) {
-        rotation.x = x;
-        rotation.y = y;
-        rotation.z = z;
-    }
-
-    public void moveRotation(float offsetX, float offsetY, float offsetZ) {
-        rotation.x += offsetX;
-        rotation.y += offsetY;
-        rotation.z += offsetZ;
+		Vector3f rotation = new Vector3f(player.getRotation());
+		rotation.x = xRotation;
+		return rotation;
     }
 }

@@ -57,13 +57,34 @@ public class AlignedCuboid extends BoundingBox {
 		if (d.x > d.y && d.x > d.z) {
 			// r * direction = 0.5 * vectorA + s * vectorB + t * vectorC
 			return d.mul(this.a / (2 * d.x)).lengthSquared();
-		} if (d.y > d.x && d.y > d.z) {
+		} else if (d.y > d.x && d.y > d.z) {
 			// r * direction = s * vectorA + 0.5 * vectorB + t * vectorC
 			return d.mul(this.b / (2 * d.x)).lengthSquared();
 		} else {
 			// r * direction = s * vectorA + t * vectorB + 0.5 * vectorC
 			return d.mul(this.c / (2 * d.x)).lengthSquared();
-		}		
+		}
+	}
+	
+	@Override
+	public Vector3f getNormalToSurface(Vector3f direction) {
+		// Mirror the direction, because we need multiple times.
+		Vector3f d = direction;
+		if (d.x < 0)
+			d.x *= -1;
+		if (d.y < 0)
+			d.y *= -1;
+		if (d.z < 0)
+			d.z *= -1;
+		
+		// At which face is the intercection?
+		if (d.x > d.y && d.x > d.z) {
+			return new Vector3f(1, 0, 0);
+		} else if (d.y > d.x && d.y > d.z) {
+			return new Vector3f(0, 1, 0);
+		} else {
+			return new Vector3f(0, 0, 1);
+		}
 	}
 	
 	public float getA() {

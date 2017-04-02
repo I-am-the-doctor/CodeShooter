@@ -30,4 +30,9 @@ public final class Sphere extends BoundingBox {
 	public void setRadius(float radius) {
 		this.radiusSquared = radius * radius;
 	}
+
+	@Override
+	public Vector3f getNormalToSurface(Vector3f direction) {
+		return direction;
+	}
 }

@@ -131,7 +131,7 @@ public class World implements INetworkable {
 			handler.startDocument();
 			handler.startElement("", "", "root", null);
 			
-			entities.forEach((IXmlSerializeable entity) -> {
+			for (IXmlSerializeable entity : entities) {
 				try {
 					AttributesImpl attributes = new AttributesImpl();
 					attributes.addAttribute("", "", "class", "", entity.getClass().getName());
@@ -143,7 +143,7 @@ public class World implements INetworkable {
 				} catch (SAXException ex) {
 					Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
 				}
-			});
+			}
 			
 			handler.endElement("", "", "root");
 			handler.endDocument();
@@ -222,11 +222,14 @@ public class World implements INetworkable {
 	public void addEntity(Object entity) {
 		if (entity instanceof IGraphItem) {
 			addGraphItem((IGraphItem) entity);
-		} else if (entity instanceof ICollideable) {
+		}
+		if (entity instanceof ICollideable) {
 			addCollideable((ICollideable) entity);
-		} else if (entity instanceof ITickable) {
+		}
+		if (entity instanceof ITickable) {
 			addTickable((ITickable) entity);
-		} else if (entity instanceof INetworkable) {
+		}
+		if (entity instanceof INetworkable) {
 			addNetworkable((INetworkable) entity);
 		}
 	}
