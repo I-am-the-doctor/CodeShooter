@@ -80,7 +80,7 @@ public class CubeShooter implements IGameLogic {
         renderer.init(window);
 
         world.load(DATA_ROOT + "world.xml");
-		this.player = new ClientPlayer(new Vector3f(0, 1, 0), 135);
+		player = new ClientPlayer(new Vector3f(0, 1, 0), 135);
 		world.addEntity(player);
 		
 		camera = new OrbitingCamera(player, 0, 5);

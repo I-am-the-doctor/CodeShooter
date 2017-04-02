@@ -22,8 +22,8 @@ public final class Velocity {
 	}
 
 	public Velocity(Vector3f velocity) {
-		this.direction = velocity;
-		this.speed = velocity.length();
+		direction = velocity;
+		speed = velocity.length();
 	}
 
 	public Vector3f getDirection() {
@@ -53,7 +53,7 @@ public final class Velocity {
 	}
 
 	public void setVelocity(Vector3f velocity) {
-		this.direction = velocity;
-		this.speed = velocity.length();
+		direction = velocity;
+		speed = velocity.length();
 	}
 }

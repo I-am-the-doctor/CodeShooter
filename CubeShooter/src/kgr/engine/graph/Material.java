@@ -69,7 +69,7 @@ public class Material {
      */
     public Material(Texture diffuse, float reflectance) {
         this();
-        this.diffuseTexture = diffuse;
+        diffuseTexture = diffuse;
         this.reflectance = reflectance;
     }
 
@@ -111,7 +111,7 @@ public class Material {
      * @return Wether this material has a diffuse texture.
      */
     public boolean hasDiffuseTexture() {
-        return this.diffuseTexture != null;
+        return diffuseTexture != null;
     }
 
 
@@ -127,14 +127,14 @@ public class Material {
      * @param diffuse The new diffuse texture for this material.
      */
     public void setDiffuseTexture(Texture diffuse) {
-        this.diffuseTexture = diffuse;
+        diffuseTexture = diffuse;
     }
 
     /**
      * @return Wether this material has a specular texture.
      */
     public boolean hasSpecularTexture() {
-        return this.specularTexture != null;
+        return specularTexture != null;
     }
 
     /**
@@ -148,6 +148,6 @@ public class Material {
      * @param specular The new specular texture for this material.
      */
     public void setSpecularTexture(Texture specular) {
-        this.specularTexture = specular;
+        specularTexture = specular;
     }
 }

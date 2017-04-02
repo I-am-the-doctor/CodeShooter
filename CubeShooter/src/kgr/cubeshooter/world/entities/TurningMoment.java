@@ -43,7 +43,7 @@ public final class TurningMoment {
 	 */
 	public TurningMoment(Vector3f turningMoment) {
 		this.turningMoment = turningMoment;
-		this.rotationSpeed = turningMoment.length();
+		rotationSpeed = turningMoment.length();
 	}
 
 	public Vector3f getRotationAxis() {
@@ -82,6 +82,6 @@ public final class TurningMoment {
 	 */
 	public void setTurningMoment(Vector3f turningMoment) {
 		this.turningMoment = turningMoment;
-		this.rotationSpeed = turningMoment.length();
+		rotationSpeed = turningMoment.length();
 	}
 }

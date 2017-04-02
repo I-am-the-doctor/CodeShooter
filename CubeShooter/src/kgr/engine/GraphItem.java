@@ -15,9 +15,9 @@ public class GraphItem implements IGraphItem {
 
     public GraphItem(Mesh mesh) {
         this.mesh = mesh;
-        this.position = new Vector3f(0, 0, 0);
-        this.scale = new Vector3f(1, 1, 1);
-        this.rotation = new Vector3f(0, 0, 0);
+        position = new Vector3f(0, 0, 0);
+        scale = new Vector3f(1, 1, 1);
+        rotation = new Vector3f(0, 0, 0);
     }
 
 	@Override
@@ -26,9 +26,9 @@ public class GraphItem implements IGraphItem {
     }
 
     public void setPosition(float x, float y, float z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
+        position.x = x;
+        position.y = y;
+        position.z = z;
     }
 
 
@@ -46,9 +46,9 @@ public class GraphItem implements IGraphItem {
     }
 	
     public void setScale(float scaleX, float scaleY, float scaleZ) {
-        this.scale.x = scaleX;
-        this.scale.y = scaleY;
-        this.scale.z = scaleZ;
+        scale.x = scaleX;
+        scale.y = scaleY;
+        scale.z = scaleZ;
     }
 
 	@Override
@@ -57,9 +57,9 @@ public class GraphItem implements IGraphItem {
     }
 
     public void setRotation(float x, float y, float z) {
-        this.rotation.x = x;
-        this.rotation.y = y;
-        this.rotation.z = z;
+        rotation.x = x;
+        rotation.y = y;
+        rotation.z = z;
     }
 
     public void setRotation(Vector3f rot) {

@@ -41,15 +41,15 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	protected static final float MOVE_SPEED = 0.25f;
 	
 	public Player(Vector3f position, float angle) {
-		this.orientation = new Orientation(new Vector3f(0, 1, 0), angle);
-		this.moveVelocity = new Velocity(new Vector3f(), 0.0f);
-		this.turningMoment = new TurningMoment(new Vector3f(), 0);
-		this.boundingBox = new AlignedCylinder(position, 1, 2);
+		orientation = new Orientation(new Vector3f(0, 1, 0), angle);
+		moveVelocity = new Velocity(new Vector3f(), 0.0f);
+		turningMoment = new TurningMoment(new Vector3f(), 0);
+		boundingBox = new AlignedCylinder(position, 1, 2);
 	}
 
 	@Override
 	public BoundingBox getBoundingBox() {
-		return this.boundingBox;
+		return boundingBox;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 
 	@Override
 	public Velocity getMoveVelocity() {
-		return this.moveVelocity;
+		return moveVelocity;
 	}
 	
 	@Override
@@ -69,7 +69,7 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	
 	@Override
 	public TurningMoment getTurningMoment() {
-		return this.turningMoment;
+		return turningMoment;
 	}
 	
 	@Override
@@ -110,21 +110,21 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 
 	@Override
 	public Vector3f getPosition() {
-		return this.boundingBox.getPosition();
+		return boundingBox.getPosition();
 	}
 
 	@Override
 	public Vector3f getScale() {
-		return new Vector3f(this.boundingBox.getRadius(), this.boundingBox.getHeight(), this.boundingBox.getRadius());
+		return new Vector3f(boundingBox.getRadius(), boundingBox.getHeight(), boundingBox.getRadius());
 	}
 
 	@Override
 	public Vector3f getRotation() {
-		return new Vector3f(0, this.orientation.getRotationAngle(), 0);
+		return new Vector3f(0, orientation.getRotationAngle(), 0);
 	}
 
 	public void setRotationAngle(float angle) {
-		this.orientation.setRotationAngle(angle);
+		orientation.setRotationAngle(angle);
 	}
 	
 	@Override

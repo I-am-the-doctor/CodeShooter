@@ -184,14 +184,14 @@ public class World implements INetworkable {
 	}
 	
 	public void tick(Input input, float milliseconds) {
-		for (ITickable tickable :this.tickableList) {
+		for (ITickable tickable :tickableList) {
 			tickable.tick(physics, input, milliseconds);
 		}
 		
-		for (Iterator<ICollideable> it_1 = this.collideableList.iterator(); it_1.hasNext();) {
+		for (Iterator<ICollideable> it_1 = collideableList.iterator(); it_1.hasNext();) {
 			ICollideable collidable = it_1.next();
 			for (Iterator<ICollideable> it_2 = it_1; it_2.hasNext();) {
-				this.physics.collide(collidable, it_2.next());
+				physics.collide(collidable, it_2.next());
 			}
 		}
 	}

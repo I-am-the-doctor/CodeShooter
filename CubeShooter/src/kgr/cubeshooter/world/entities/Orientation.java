@@ -54,7 +54,7 @@ public final class Orientation {
 	}
 
 	public void rotateVector(Vector3f rotationVector) {
-		this.rotationVector.add(rotationVector);
+		rotationVector.add(rotationVector);
 	}
 
 	public void rotateAngle(float angle) {

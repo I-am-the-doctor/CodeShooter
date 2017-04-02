@@ -101,18 +101,23 @@ public class AlignedCuboid extends BoundingBox {
 
 	public void setA(float a) {
 		this.a = a;
+		radiusSquared = new Vector3f(a, b, c).lengthSquared();
 	}
 
 	public void setB(float b) {
 		this.b = b;
+		radiusSquared = new Vector3f(a, b, c).lengthSquared();
 	}
 	
 	public void setC(float c) {
 		this.c = c;
+		radiusSquared = new Vector3f(a, b, c).lengthSquared();
 	}
 
 	public void setSize(float a, float b, float c) {
 		this.a = a;
-		this.radiusSquared = new Vector3f(a, b, c).lengthSquared();
+		this.b = b;
+		this.c = c;
+		radiusSquared = new Vector3f(a, b, c).lengthSquared();
 	}
 }
