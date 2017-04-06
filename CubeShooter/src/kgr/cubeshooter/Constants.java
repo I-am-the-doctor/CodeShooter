@@ -24,6 +24,21 @@ public class Constants {
     public static final int MAX_POINT_LIGHTS = 16;
 
     /**
+     * The Field of View in Radians.
+     */
+    public static final float FOV = (float) Math.toRadians(60.0f);
+
+    /**
+     * Near clip distance.
+     */
+    public static final float Z_NEAR = 0.01f;
+
+    /**
+     * Far clip distance.
+     */
+    public static final float Z_FAR = 1000.f;
+
+    /**
      * Path to the root folder of game data.
      */
     public static final String DATA_ROOT = "/kgr/cubeshooter/data/";

@@ -1,6 +1,10 @@
 package kgr.engine;
 
+import kgr.cubeshooter.client.Renderer;
 import kgr.engine.graph.Mesh;
+import kgr.engine.graph.ShaderProgram;
+import kgr.engine.graph.Transformation;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class GraphItem implements IGraphItem {
@@ -20,7 +24,7 @@ public class GraphItem implements IGraphItem {
         rotation = new Vector3f(0, 0, 0);
     }
 
-	@Override
+    @Override
     public Vector3f getPosition() {
         return position;
     }
@@ -31,27 +35,26 @@ public class GraphItem implements IGraphItem {
         position.z = z;
     }
 
-
     public void setPosition(Vector3f pos) {
-       setPosition(pos.x, pos.y, pos.z);
+        setPosition(pos.x, pos.y, pos.z);
     }
 
-	@Override
+    @Override
     public Vector3f getScale() {
         return scale;
     }
 
     public void setScale(Vector3f scale) {
-		setScale(scale.x, scale.y, scale.z);
+        setScale(scale.x, scale.y, scale.z);
     }
-	
+
     public void setScale(float scaleX, float scaleY, float scaleZ) {
         scale.x = scaleX;
         scale.y = scaleY;
         scale.z = scaleZ;
     }
 
-	@Override
+    @Override
     public Vector3f getRotation() {
         return rotation;
     }
@@ -63,20 +66,20 @@ public class GraphItem implements IGraphItem {
     }
 
     public void setRotation(Vector3f rot) {
-       setRotation(rot.x, rot.y, rot.z);
+        setRotation(rot.x, rot.y, rot.z);
     }
 
-	@Override
+    @Override
     public Mesh getMesh() {
         return mesh;
     }
 
-	@Override
-	public void init() {
-	}
+    @Override
+    public void init() {
+    }
 
-	@Override
-	public void deinit() {
-		mesh.cleanUp();
-	}
+    @Override
+    public void deinit() {
+        mesh.cleanUp();
+    }
 }

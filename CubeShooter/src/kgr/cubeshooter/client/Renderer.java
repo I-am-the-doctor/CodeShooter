@@ -1,8 +1,11 @@
 package kgr.cubeshooter.client;
 
 import java.util.Collection;
+import static kgr.cubeshooter.Constants.FOV;
 import static kgr.cubeshooter.Constants.MAX_POINT_LIGHTS;
 import static kgr.cubeshooter.Constants.SHADERS_ROOT;
+import static kgr.cubeshooter.Constants.Z_FAR;
+import static kgr.cubeshooter.Constants.Z_NEAR;
 import kgr.engine.IGraphItem;
 import kgr.engine.Utils;
 import kgr.engine.Window;
@@ -10,7 +13,6 @@ import kgr.engine.graph.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -21,31 +23,41 @@ import static org.lwjgl.opengl.GL11.*;
 public class Renderer {
 
     /**
-     * The Field of View in Radians.
+     *
      */
-    private static final float FOV = (float) Math.toRadians(60.0f);
-
-    /**
-     * Near clip distance.
-     */
-    private static final float Z_NEAR = 0.01f;
-
-    /**
-     * Far clip distance.
-     */
-    private static final float Z_FAR = 1000.f;
-
     private final Transformation transformation;
+
+    /**
+     * The camera instance.
+     */
+    private Camera camera;
 
     /**
      * A test shader program.
      */
     private ShaderProgram shaderProgram;
 
+
+    /**
+     * The color of the ambient light.
+     */
+    private Vector3f ambientLight;
+
+    /**
+     * A list of all point light sources.
+     */
+    private PointLight[] pointLights;
+
+    /**
+     * A test directional lightVisible source.
+     */
+    private DirectionalLight directionalLight;
+    private float lightAngle;
+
     /**
      * The global specular power.
      */
-    private float specularPower;
+    private final float specularPower;
 
     /**
      *
@@ -87,8 +99,25 @@ public class Renderer {
         shaderProgram.createDirectionalLightUniform("directionalLight");
 
         glClearColor(0.2f, 0.3f, 0.6f, 1);
-        glEnable(GL11.GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
+
+        // Set up the ambient light and a few point lights.
+        ambientLight = new Vector3f(0.5f, 0.5f, 0.45f);
+        Vector3f lightColour = new Vector3f(0.7f, 0.5f, 0.5f);
+        Vector3f lightPosition = new Vector3f(2, 6, 2);
+        pointLights = new PointLight[MAX_POINT_LIGHTS];
+        for (int i = 0; i < MAX_POINT_LIGHTS - 5; i++) {
+            pointLights[i] = new PointLight(lightColour, lightPosition, 10f);
+            PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 1f);
+            pointLights[i].setAttenuation(att);
+            lightPosition = new Vector3f(4f * i, 6, 4f * i);
+            lightColour = new Vector3f((float) (0.7 + i / 10), 0.5f, 0.5f);
+        }
+
+        // Initialize the directional (sun) light.
+        lightColour = new Vector3f(0.5f, 0.4f, 0.4f);
+        directionalLight = new DirectionalLight(lightColour, new Vector3f(0, 0, 0), 1.5f);
     }
 
     /**
@@ -101,21 +130,41 @@ public class Renderer {
     /**
      *
      * @param window The window in which to render.
-     * @param camera The camera.
      * @param graphItems Render a list of graphical items.
-     * @param ambientLight An ambient light "source".
-     * @param pointLights
-     * @param dirLight A directional light source.
      */
-    public void render(Window window, Camera camera, Collection<IGraphItem> graphItems,
-            Vector3f ambientLight, PointLight pointLights[], DirectionalLight dirLight) {
+    public void render(Window window, Collection<IGraphItem> graphItems)
+    {
+        // Clear the screen.
         clear();
+
+        // TEMPORARY: Update directional light direction, intensity and colour like a day/night cycle.
+        lightAngle += 1.1f;
+        if (lightAngle > 90) {
+            directionalLight.setIntensity(0);
+            if (lightAngle >= 360) {
+                lightAngle = -90;
+            }
+        } else if (lightAngle <= -80 || lightAngle >= 80) {
+            float factor = 1 - (Math.abs(lightAngle) - 80) / 10.0f;
+            directionalLight.setIntensity(factor);
+            directionalLight.getColour().y = Math.max(factor, 0.9f);
+            directionalLight.getColour().z = Math.max(factor, 0.5f);
+        } else {
+            directionalLight.setIntensity(1);
+            directionalLight.getColour().x = 1;
+            directionalLight.getColour().y = 1;
+            directionalLight.getColour().z = 1;
+        }
+        double angRad = Math.toRadians(lightAngle);
+        directionalLight.getDirection().x = (float) Math.sin(angRad);
+        directionalLight.getDirection().y = (float) Math.cos(angRad);
 
         if (window.isResized()) {
             glViewport(0, 0, window.getWidth(), window.getHeight());
             window.setResized(false);
         }
 
+        // The actual render.
         shaderProgram.bind();
 
         // Update projection Matrix.
@@ -128,10 +177,10 @@ public class Renderer {
         shaderProgram.setUniform("texture_sampler", 0);
 
         // Render all lights.
-        renderLights(viewMatrix, ambientLight, pointLights, dirLight);
+        renderLights(viewMatrix, ambientLight, pointLights, directionalLight);
 
         // Get a copy of the directional light object and transform its position to view coordinates.
-        DirectionalLight currDirLight = new DirectionalLight(dirLight);
+        DirectionalLight currDirLight = new DirectionalLight(directionalLight);
         Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
         dir.mul(viewMatrix);
         currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
@@ -139,15 +188,8 @@ public class Renderer {
 
         shaderProgram.setUniform("texture_sampler", 0);
 
-        // Render each game item.
-        for (IGraphItem gameItem : graphItems) {
-            Mesh mesh = gameItem.getMesh();
-            // Set model view matrix for this item
-            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
-            shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            // Render the mesh for this game item
-            shaderProgram.setUniform("material", mesh.getMaterial());
-            mesh.render();
+        for (IGraphItem graphItem : graphItems) {
+            graphItem.render(this);
         }
 
         shaderProgram.unbind();
@@ -198,5 +240,41 @@ public class Renderer {
         if (shaderProgram != null) {
             shaderProgram.cleanup();
         }
+    }
+
+
+    /**
+     * @return
+     */
+    public ShaderProgram getShaderProgram()
+    {
+        return shaderProgram;
+    }
+
+
+    /**
+     * @return
+     */
+    public Transformation getTransformation()
+    {
+        return transformation;
+    }
+
+
+    /**
+     * @param camera
+     */
+    public void setCamera(Camera camera)
+    {
+        this.camera = camera;
+    }
+
+
+    /**
+     * @return
+     */
+    public Camera getCamera()
+    {
+        return camera;
     }
 }

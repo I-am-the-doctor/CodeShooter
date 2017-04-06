@@ -12,6 +12,7 @@ import kgr.cubeshooter.world.entities.TurningMoment;
 import kgr.cubeshooter.world.entities.Velocity;
 import kgr.cubeshooter.world.entities.boundingBoxes.AlignedCylinder;
 import kgr.cubeshooter.world.entities.boundingBoxes.BoundingBox;
+import kgr.engine.GraphItem;
 import kgr.engine.IGraphItem;
 import kgr.engine.Input;
 import kgr.engine.graph.Material;
@@ -24,22 +25,22 @@ import org.joml.Vector3f;
  *
  * @author Benjamin
  */
-public class Player  implements ICollideable, ITickable, IGraphItem {
-	
+public class Player implements ICollideable, ITickable, IGraphItem {
+
 	protected final Orientation orientation;
-	
+
 	protected Velocity moveVelocity;
-	
+
 	protected final TurningMoment turningMoment;
-	
+
 	protected final AlignedCylinder boundingBox;
-	
+
 	protected static Mesh mesh;
-	
+
 	protected static int instances;
-	
+
 	protected static final float MOVE_SPEED = 0.25f;
-	
+
 	public Player(Vector3f position, float angle) {
 		orientation = new Orientation(new Vector3f(0, 1, 0), angle);
 		moveVelocity = new Velocity(new Vector3f(), 0.0f);
@@ -61,21 +62,21 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	public Velocity getMoveVelocity() {
 		return moveVelocity;
 	}
-	
+
 	@Override
 	public void setMoveVelocity(Velocity moveVelocity) {
 		this.moveVelocity = moveVelocity;
 	}
-	
+
 	@Override
 	public TurningMoment getTurningMoment() {
 		return turningMoment;
 	}
-	
+
 	@Override
 	public void setTurningMoment(TurningMoment turningMoment) {
 	}
-	
+
 	@Override
 	public void tick(Physics physics, Input input, float milliseconds) {
 	}
@@ -91,10 +92,10 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 			} catch (Exception e) {
 				System.err.println("Cant't load mesh (/kgr/cubeshooter/data/models/player.obj) or texture (/kgr/cubeshooter/data/textures/playerUV.png)");
 			}
-			
+
 			instances = 0;
 		}
-		
+
 		instances++;
 	}
 
@@ -104,7 +105,7 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 			mesh.cleanUp();
 			mesh = null;
 		}
-		
+
 		instances--;
 	}
 
@@ -126,7 +127,7 @@ public class Player  implements ICollideable, ITickable, IGraphItem {
 	public void setRotationAngle(float angle) {
 		orientation.setRotationAngle(angle);
 	}
-	
+
 	@Override
 	public Mesh getMesh() {
 		return mesh;

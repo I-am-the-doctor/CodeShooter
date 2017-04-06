@@ -112,14 +112,13 @@ void main()
     vec4 totalLight = vec4(ambientLight, 1.0);
     totalLight += calcDirectionalLight(directionalLight, mvVertexPos, mvVertexNormal);
 
-   for (int i = 0; i < MAX_POINT_LIGHTS; i++)
-   {
-       if ( pointLights[i].intensity > 0 )
-       {
-           totalLight += calcPointLight(pointLights[i], mvVertexPos, mvVertexNormal);
-       }
-   }
-
+    for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+    {
+        if ( pointLights[i].intensity > 0 )
+        {
+            totalLight += calcPointLight(pointLights[i], mvVertexPos, mvVertexNormal);
+        }
+    }
 
     fragColor = baseColour * totalLight;
 }

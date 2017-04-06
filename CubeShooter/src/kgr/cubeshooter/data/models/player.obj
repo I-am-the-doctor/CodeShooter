@@ -1,6 +1,5 @@
 # Blender v2.74 (sub 0) OBJ File: 'Player1.blend'
 # www.blender.org
-mtllib player.mtl
 o Cylinder.001_Cylinder.003
 v 0.000000 -1.000000 -1.000000
 v 0.000000 1.000000 -1.000000
@@ -196,7 +195,6 @@ vn 0.000000 1.000000 0.000000
 vn -0.049100 0.000000 -0.998800
 vn -0.146700 0.000000 -0.989200
 vn 0.000000 -1.000000 0.000000
-usemtl None
 s off
 f 2//1 4//1 3//1
 f 4//2 6//2 5//2
